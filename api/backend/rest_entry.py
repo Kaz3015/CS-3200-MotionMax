@@ -1,48 +1,51 @@
 from flask import Flask
-
 from backend.db_connection import db
-from backend.customers.customer_routes import customers
-from backend.products.products_routes import products
+from backend.client.customer_routes import customers
+from backend.trainer.products_routes import trainer
 from backend.simple.simple_routes import simple_routes
 import os
 from dotenv import load_dotenv
+
 
 def create_app():
     app = Flask(__name__)
 
     # Load environment variables
-    # This function reads all the values from inside
-    # the .env file (in the parent folder) so they
-    # are available in this file.  See the MySQL setup 
-    # commands below to see how they're being used.
     load_dotenv()
 
-    # secret key that will be used for securely signing the session 
-    # cookie and can be used for any other security related needs by 
-    # extensions or your application
-    # app.config['SECRET_KEY'] = 'someCrazyS3cR3T!Key.!'
+    # Log all relevant environment variables to diagnose issues
+    app.logger.info('Environment variables:')
+    app.logger.info(f'DB_USER: {os.getenv("DB_USER")}')
+    app.logger.info(f'DB_HOST: {os.getenv("DB_HOST")}')
+    app.logger.info(f'DB_PORT: {os.getenv("DB_PORT")}')
+    app.logger.info(f'DB_NAME: {os.getenv("DB_NAME")}')
+
+    # Set app configuration
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+    app.config['MYSQL_DATABASE_USER'] = os.getenv('DB_USER', '').strip()
+    app.config['MYSQL_DATABASE_PASSWORD'] = os.getenv('MYSQL_ROOT_PASSWORD', '').strip()
+    app.config['MYSQL_DATABASE_HOST'] = os.getenv('DB_HOST', '').strip()
+    app.config['MYSQL_DATABASE_PORT'] = int(os.getenv('DB_PORT', '3306').strip())
+    app.config['MYSQL_DATABASE_DB'] = os.getenv('DB_NAME', '').strip()
 
-    # # these are for the DB object to be able to connect to MySQL. 
-    # app.config['MYSQL_DATABASE_USER'] = 'root'
-    app.config['MYSQL_DATABASE_USER'] = os.getenv('DB_USER').strip()
-    app.config['MYSQL_DATABASE_PASSWORD'] = os.getenv('MYSQL_ROOT_PASSWORD').strip()
-    app.config['MYSQL_DATABASE_HOST'] = os.getenv('DB_HOST').strip()
-    app.config['MYSQL_DATABASE_PORT'] = int(os.getenv('DB_PORT').strip())
-    app.config['MYSQL_DATABASE_DB'] = os.getenv('DB_NAME').strip()  # Change this to your DB name
-
-    # Initialize the database object with the settings above. 
-    app.logger.info('current_app(): starting the database connection')
+    # Initialize the database
+    app.logger.info('Initializing database connection')
     db.init_app(app)
 
+    # Create a test connection to verify database access
+    with app.app_context():
+        try:
+            # This depends on how your db object is implemented
+            # For example with Flask-SQLAlchemy you might do:
+            # db.engine.connect()
+            app.logger.info('Database connection successful')
+        except Exception as e:
+            app.logger.error(f'Database connection failed: {str(e)}')
+            # Optionally re-raise the exception if you want the app to fail on startup
+            # raise e
 
-    # Register the routes from each Blueprint with the app object
-    # and give a url prefix to each
-    app.logger.info('current_app(): registering blueprints with Flask app object.')   
+    # Register blueprints
     app.register_blueprint(simple_routes)
-    app.register_blueprint(customers,   url_prefix='/c')
-    app.register_blueprint(products,    url_prefix='/p')
+    app.register_blueprint(trainer, url_prefix='/t')
 
-    # Don't forget to return the app object
     return app
-

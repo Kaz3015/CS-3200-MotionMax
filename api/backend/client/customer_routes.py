@@ -8,7 +8,7 @@ from flask import jsonify
 from flask import make_response
 from flask import current_app
 from backend.db_connection import db
-from backend.ml_models.model01 import predict
+
 
 #------------------------------------------------------------
 # Create a new Blueprint object, which is a collection of 
@@ -74,7 +74,7 @@ def predict_value(var01, var02):
     current_app.logger.info(f'var01 = {var01}')
     current_app.logger.info(f'var02 = {var02}')
 
-    returnVal = predict(var01, var02)
+    returnVal = 1
     return_dict = {'result': returnVal}
 
     the_response = make_response(jsonify(return_dict))
