@@ -48,3 +48,13 @@ equipment_string = st.text_input("Equipment", "")
 
 df = pd.DataFrame(requests.get(f'http://api:4000/c/equipment-based-search/{equipment_string}').json())
 st.dataframe(df)
+
+#MAKE A DIFFICULTY-BASED SEARCH
+st.write(f"## Make a difficulty based search")
+
+beginner = st.checkbox("Beginner", value=False)
+intermediate = st.checkbox("Intermediate", value=True)
+advanced = st.checkbox("Advanced", value=True)
+
+df = pd.DataFrame(requests.get(f'http://api:4000/c/difficulty-based-search/{beginner}/{intermediate}/{advanced}/').json())
+st.dataframe(df)
