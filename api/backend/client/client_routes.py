@@ -60,3 +60,26 @@ def get_all_user_made_workouts(user_id):
     response.status_code = 200
     return response
 
+@client.route('/workouts/by-trainer/<client_user_id>', methods=['GET'])
+def get_all_trainer_made_workouts_for_user(client_user_id):
+    query = f'''
+        SELECT c.name, c.description
+        FROM Circuit c
+            JOIN User u ON c.created_by = u.user_id
+        WHERE u.role = 'trainer' AND c.user_id = {client_user_id};
+    '''
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+
+
+
+
+
+
+
+
