@@ -137,8 +137,6 @@ def make_equipment_based_search(equipment_string):
     
     equipment_string = equipment_string.strip()
     
-    print(f'THE OUTPUT IS: {equipment_string}')
-    
     if(equipment_string == ""):
         query = '''
             SELECT e.name, e.equipment_needed
@@ -154,6 +152,41 @@ def make_equipment_based_search(equipment_string):
         cursor.execute(query, (equipment_string,))
     
     
+    theData = cursor.fetchall()
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response 
+
+
+@client.route('/difficulty-based-search/<beginner>/<intermediate>/<advanced>/', methods=['GET'])
+def make_difficulty_based_search(beginner, intermediate, advanced):
+    query = '''
+            SELECT e.name, e.difficulty
+            FROM Exercise e
+        '''
+    
+    prevDifficulty = False
+    
+    if beginner:
+        query += " WHERE e.difficulty = 'beginner'"
+        prevDifficulty = True
+    
+    if intermediate and prevDifficulty:
+        query += " OR e.difficulty = 'intermediate'"
+        prevDifficulty = True
+    elif intermediate:
+        query += " WHERE e.difficulty = 'intermediate'"
+
+    if advanced and prevDifficulty:
+        query += " OR e.difficulty = 'advanced'"
+        prevDifficulty = True
+    elif advanced:
+        query += " WHERE e.difficulty = 'advanced'"    
+    
+    query += ";"
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
     theData = cursor.fetchall()
     response = make_response(jsonify(theData))
     response.status_code = 200
