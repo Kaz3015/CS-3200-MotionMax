@@ -292,3 +292,19 @@ def get_health_tip():
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
+
+@client.route('/motivation/tip/', methods=['GET'])
+def get_motivation_tip():
+    query = f'''
+        SELECT m.text
+        FROM Motivation m
+        ORDER BY RAND()
+        LIMIT 1;
+    '''
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
