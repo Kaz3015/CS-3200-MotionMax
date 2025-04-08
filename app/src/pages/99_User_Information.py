@@ -23,3 +23,9 @@ st.write(f"## List of Current User-made Workouts")
 df = pd.DataFrame(requests.get(f'http://api:4000/c/workouts/by-client/{st.session_state["user_id"]}').json())
 st.dataframe(df)
 
+#LIST OF TRAINER-MADE WORKOUTS FOR USER
+st.write(f"## List of Current Trainer-made Workouts")
+
+df = pd.DataFrame(requests.get(f'http://api:4000/c/workouts/by-trainer/{st.session_state["user_id"]}').json())
+st.dataframe(df)
+
