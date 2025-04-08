@@ -74,3 +74,9 @@ exercise_type_string = st.text_input("Exercise Type", "")
 
 df = pd.DataFrame(requests.get(f'http://api:4000/c/exercise-type-based-search/{exercise_type_string}').json())
 st.dataframe(df)
+
+#GRAB THE NEXT UP EXERCISES VIDEO URL
+st.write(f"## Next up exercise's video URL")
+
+df = pd.DataFrame(requests.get(f'http://api:4000/c/workouts/next-scheduled/video-url/{st.session_state["user_id"]}').json())
+st.dataframe(df)
