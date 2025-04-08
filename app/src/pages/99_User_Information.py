@@ -92,3 +92,11 @@ st.write(f'## Random motivation tip')
 
 df = pd.DataFrame(requests.get(f'http://api:4000/c/motivation/tip/').json())
 st.dataframe(df)
+
+
+
+#GET TODAY'S MEAL BREAKDOWN
+st.write(f'## Todays meal breakdown')
+
+df = pd.DataFrame(requests.get(f'http://api:4000/c/health/today-meal-breakdown/{st.session_state["user_id"]}').json())
+st.dataframe(df)
