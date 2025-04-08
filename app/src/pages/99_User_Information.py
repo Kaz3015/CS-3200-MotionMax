@@ -66,3 +66,11 @@ target_muscle_string = st.text_input("Target Muscle", "")
 
 df = pd.DataFrame(requests.get(f'http://api:4000/c/target-muscle-based-search/{target_muscle_string}').json())
 st.dataframe(df)
+
+#MAKE A EXERCISE TYPE BASED SEARCH
+st.write(f"## Make an exercise type based search")
+
+exercise_type_string = st.text_input("Exercise Type", "")
+
+df = pd.DataFrame(requests.get(f'http://api:4000/c/exercise-type-based-search/{exercise_type_string}').json())
+st.dataframe(df)
