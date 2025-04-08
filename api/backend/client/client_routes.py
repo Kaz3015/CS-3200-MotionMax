@@ -83,3 +83,26 @@ def get_all_trainer_made_workouts_for_user(client_user_id):
 
 
 
+@client.route('/workouts/currently-scheduled-exercises/<user_id>', methods=['GET'])
+def all_scheduled_e(user_id):
+    query = f'''
+        SELECT e.name, es.weight, es.reps, es.duration_seconds, es.is_superset, es.rest_seconds, es.completed
+        FROM Circuit c
+            JOIN User u ON c.user_id = u.user_id
+            JOIN Exercise e ON c.circuit_id = e.circuit_id
+            JOIN ExerciseSet es ON e.exercise_id = es.exercise_id
+        WHERE c.scheduled_date = CURRENT_DATE AND u.user_id = {user_id}
+        ORDER BY c.circuit_id, es.set_order;
+    '''
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+
+
+
+
+
