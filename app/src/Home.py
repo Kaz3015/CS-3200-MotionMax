@@ -62,13 +62,16 @@ if st.button("Act as John, a Political Fitness Trainer",
     logger.info("Logging in as Fitness Trainer Persona")
     st.switch_page('pages/00_Pol_Strat_Home.py')
 
-if st.button('Act as Mohammad, an USAID worker', 
+if st.button('Act as Jane, a workout client', 
             type = 'primary', 
             use_container_width=True):
     st.session_state['authenticated'] = True
-    st.session_state['role'] = 'usaid_worker'
-    st.session_state['first_name'] = 'Mohammad'
-    st.switch_page('pages/10_USAID_Worker_Home.py')
+    st.session_state['role'] = 'client'
+    
+    st.session_state['first_name'] = 'Jane'
+    st.session_state['last_name'] = 'Smith'
+    st.session_state['user_id'] = requests.get('http://api:4000/c').json()['user_id']
+    st.switch_page('pages/99_User_Information.py')
 
 if st.button('Act as System Administrator', 
             type = 'primary', 
