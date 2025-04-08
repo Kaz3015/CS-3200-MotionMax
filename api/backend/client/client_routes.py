@@ -141,13 +141,13 @@ def make_equipment_based_search(equipment_string):
     
     if(equipment_string == ""):
         query = '''
-            SELECT e.name
+            SELECT e.name, e.equipment_needed
             FROM Exercise e
         '''
         cursor.execute(query)
     else:
         query = '''
-            SELECT e.name
+            SELECT e.name, e.equipment_needed
             FROM Exercise e
             WHERE e.equipment_needed LIKE CONCAT('%%', %s, '%%');
         '''
