@@ -80,3 +80,9 @@ st.write(f"## Next up exercise's video URL")
 
 df = pd.DataFrame(requests.get(f'http://api:4000/c/workouts/next-scheduled/video-url/{st.session_state["user_id"]}').json())
 st.dataframe(df)
+
+#GET A RANDOM HEALTH TIP
+st.write(f'## Random health tip')
+
+df = pd.DataFrame(requests.get(f'http://api:4000/c/health/tip/').json())
+st.dataframe(df)
