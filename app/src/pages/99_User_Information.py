@@ -58,3 +58,11 @@ advanced = st.checkbox("Advanced", value=True)
 
 df = pd.DataFrame(requests.get(f'http://api:4000/c/difficulty-based-search/{beginner}/{intermediate}/{advanced}/').json())
 st.dataframe(df)
+
+#MAKE A TARGET MUSCLE BASED SEARCH
+st.write(f"## Make a target muscle based search")
+
+target_muscle_string = st.text_input("Target Muscle", "")
+
+df = pd.DataFrame(requests.get(f'http://api:4000/c/target-muscle-based-search/{target_muscle_string}').json())
+st.dataframe(df)
