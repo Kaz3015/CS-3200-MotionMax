@@ -106,3 +106,25 @@ def all_scheduled_e(user_id):
 
 
 
+
+@client.route('/workouts/currently-scheduled/next-exercise/<user_id>', methods=['GET'])
+def next_up_workout_exercise_information(user_id):
+    query = f'''
+        SELECT e.name, e.personal_notes, e.video_url
+        FROM Exercise e
+            JOIN Circuit c ON e.circuit_id = c.circuit_id
+            JOIN User u ON c.user_id = u.user_id
+            JOIN ExerciseSet es ON e.exercise_id = es.exercise_id
+        WHERE c.scheduled_date = CURRENT_DATE AND u.user_id = {user_id}
+        GROUP BY e.exercise_id, e.name
+        HAVING COUNT(*) > SUM(IF(es.completed = TRUE, 1, 0))
+        ORDER BY e.exercise_id
+        LIMIT 1;
+    '''
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
