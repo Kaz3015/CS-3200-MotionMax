@@ -128,3 +128,33 @@ def next_up_workout_exercise_information(user_id):
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
+
+@client.route('/equipment-based-search/', defaults={'equipment_string': ''}, methods=['GET'])
+@client.route('/equipment-based-search/<equipment_string>', methods=['GET'])
+def make_equipment_based_search(equipment_string):
+    cursor = None
+    cursor = db.get_db().cursor()
+    
+    equipment_string = equipment_string.strip()
+    
+    print(f'THE OUTPUT IS: {equipment_string}')
+    
+    if(equipment_string == ""):
+        query = '''
+            SELECT e.name
+            FROM Exercise e
+        '''
+        cursor.execute(query)
+    else:
+        query = '''
+            SELECT e.name
+            FROM Exercise e
+            WHERE e.equipment_needed LIKE CONCAT('%%', %s, '%%');
+        '''
+        cursor.execute(query, (equipment_string,))
+    
+    
+    theData = cursor.fetchall()
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response 
