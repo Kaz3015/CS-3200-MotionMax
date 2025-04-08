@@ -308,3 +308,22 @@ def get_motivation_tip():
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
+
+@client.route('/health/today-meal-breakdown/<user_id>', methods=['GET'])
+def todays_meal_breakdown(user_id):
+    query = f'''
+        SELECT fl.meal_type, SUM(fi.calories) AS `calories`, SUM(fi.protein) AS `protein`, SUM(fi.carbs) AS `carbs`, SUM(fi.fats) AS `fats`
+        FROM User u
+            JOIN FoodLog fl ON u.user_id = fl.user_id
+            JOIN FoodLog_FoodItem flfi on fl.food_log_id = flfi.food_log_id
+            JOIN FoodItem fi on flfi.food_item_id = fi.food_item_id
+        WHERE fl.date_logged = CURRENT_DATE AND u.user_id = {user_id}
+        GROUP BY fl.meal_type;
+    '''
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
