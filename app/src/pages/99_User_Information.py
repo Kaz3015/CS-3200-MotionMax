@@ -86,3 +86,9 @@ st.write(f'## Random health tip')
 
 df = pd.DataFrame(requests.get(f'http://api:4000/c/health/tip/').json())
 st.dataframe(df)
+
+#GET A RANDOM MOTIVATION TIP
+st.write(f'## Random motivation tip')
+
+df = pd.DataFrame(requests.get(f'http://api:4000/c/motivation/tip/').json())
+st.dataframe(df)
