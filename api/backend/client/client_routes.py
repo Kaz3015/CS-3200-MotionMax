@@ -220,3 +220,34 @@ def make_target_muscle_based_search(target_muscle_string):
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response 
+
+
+
+
+@client.route('/exercise-type-based-search/', defaults={'exercise_type_string': ''}, methods=['GET'])
+@client.route('/exercise-type-based-search/<exercise_type_string>', methods=['GET'])
+def make_exercise_type_based_search(exercise_type_string):
+    cursor = None
+    cursor = db.get_db().cursor()
+    
+    equipment_string = exercise_type_string.strip()
+    
+    if(exercise_type_string == ""):
+        query = '''
+            SELECT e.name, e.exercise_type
+            FROM Exercise e
+        '''
+        cursor.execute(query)
+    else:
+        query = '''
+            SELECT e.name, e.exercise_type
+            FROM Exercise e
+            WHERE e.exercise_type LIKE CONCAT('%%', %s, '%%');
+        '''
+        cursor.execute(query, (exercise_type_string,))
+    
+    
+    theData = cursor.fetchall()
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response 
