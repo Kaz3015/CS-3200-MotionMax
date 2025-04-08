@@ -191,3 +191,32 @@ def make_difficulty_based_search(beginner, intermediate, advanced):
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response 
+
+
+@client.route('/target-muscle-based-search/', defaults={'target_muscle_string': ''}, methods=['GET'])
+@client.route('/target-muscle-based-search/<target_muscle_string>', methods=['GET'])
+def make_target_muscle_based_search(target_muscle_string):
+    cursor = None
+    cursor = db.get_db().cursor()
+    
+    equipment_string = target_muscle_string.strip()
+    
+    if(target_muscle_string == ""):
+        query = '''
+            SELECT e.name, e.target_muscle
+            FROM Exercise e
+        '''
+        cursor.execute(query)
+    else:
+        query = '''
+            SELECT e.name, e.target_muscle
+            FROM Exercise e
+            WHERE e.target_muscle LIKE CONCAT('%%', %s, '%%');
+        '''
+        cursor.execute(query, (target_muscle_string,))
+    
+    
+    theData = cursor.fetchall()
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response 
