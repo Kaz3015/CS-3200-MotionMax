@@ -276,3 +276,19 @@ def next_up_workout_exercise_video_url(user_id):
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
+
+@client.route('/health/tip/', methods=['GET'])
+def get_health_tip():
+    query = f'''
+        SELECT ht.text
+        FROM HealthTips ht
+        ORDER BY RAND()
+        LIMIT 1;
+    '''
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
