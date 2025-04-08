@@ -35,3 +35,8 @@ st.write(f"## Breakdown of currently scheduled exercises in the workout for toda
 df = pd.DataFrame(requests.get(f'http://api:4000/c/workouts/currently-scheduled-exercises/{st.session_state["user_id"]}').json())
 st.dataframe(df)
 
+#BREAKDOWN OF CURRENTLY SCHEDULED WORKOUT FOR TODAY
+st.write(f"## Breakdown of currently scheduled workout for today")
+
+df = pd.DataFrame(requests.get(f'http://api:4000/c/workouts/currently-scheduled/next-exercise/{st.session_state["user_id"]}').json())
+st.dataframe(df)
