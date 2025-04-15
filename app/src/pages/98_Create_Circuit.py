@@ -161,28 +161,4 @@ with r2c3:
         st.write("There's no associated video url! Please add one!")
     else:
         st.video(st.session_state['video_url'])
-        
-if st.button("Submit Circuit"):
     
-    if st.session_state["circuit_name"] == None:
-        st.write(":red[Please specify a circuit name!]")
-    elif st.session_state["circuit_description"] == None:
-        st.write(":red[Please specify a circuit description!]")
-    
-    circuit_response = requests.post(f"http://api:4000/c/insert/circuit/{st.session_state['user_id']}/{st.session_state['circuit_name']}/{st.session_state['circuit_description']}/").json()
-    
-    for index, exercise in st.session_state["submitted_exercises"].iterrows():
-        exercise_response = requests.post(f"http://api:4000/c/insert/exercise_set_to_circuit/2/<exercise_set_info>/").json()
-    
-    if circuit_response.get('status') == 'success':
-        st.switch_page('pages/99_User_Information.py')
-    else:
-        st.write(circuit_response.get('message'))
-    
-    
-    
-    #Create a circuit
-    #Loop through each exercise 
-        
-        #Loop through each set for each exercise
-            #Add the exercise set to the circuit
