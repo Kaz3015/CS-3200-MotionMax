@@ -95,3 +95,18 @@ with r1c2:
         
         
         st.button("Complete Set")
+        
+    
+with r1c3:
+    st.header("Status of Workout")
+    df = pd.DataFrame(requests.get(f'http://api:4000/c/workouts/next-scheduled/video-url/{st.session_state["user_id"]}').json())
+    
+    if df.empty:
+        st.write(":green[Congrats! Your workout is completed!]")
+    else:
+        st.write(":red[You haven't completed your workout for today! Remember to complete it!]")
+    
+    st.header("Motivation")
+    df = pd.DataFrame(requests.get(f'http://api:4000/c/motivation/tip/').json())
+    
+    st.write(df.iloc[0]['text'])
