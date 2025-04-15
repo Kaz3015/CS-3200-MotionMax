@@ -121,3 +121,70 @@ with r2c1:
     for index, row in df.iterrows():
         st.button(row['name'])
         
+with r2c2:
+    st.header("Food Intake Data")
+    
+    st.subheader("Breakfast")
+    df = pd.DataFrame(requests.get(f'http://api:4000/c/food/food_intake_information/"breakfast"/{st.session_state["user_id"]}/').json())
+    
+    if df.empty:
+        st.write(f"#### Nothing logged yet!")
+    else:
+        for index, row in df.iterrows():
+            st.write(f"##### {row['name']}")
+            st.write(f"Calories: {row['calories']} calories")
+            st.write(f"Protein: {row['protein']}g")
+            st.write(f"Carbohydrates: {row['carbs']}g")
+            st.write(f"Fats: {row['fats']}g")
+    
+    st.subheader("Lunch")
+    df = pd.DataFrame(requests.get(f'http://api:4000/c/food/food_intake_information/"lunch"/{st.session_state["user_id"]}/').json())
+    
+    if df.empty:
+        st.write(f"#### Nothing logged yet!")
+    else:
+        for index, row in df.iterrows():
+            st.write(f"##### {row['name']}")
+            st.write(f"Calories: {row['calories']} calories")
+            st.write(f"Protein: {row['protein']}g")
+            st.write(f"Carbohydrates: {row['carbs']}g")
+            st.write(f"Fats: {row['fats']}g")
+    
+    st.subheader("Dinner")
+    df = pd.DataFrame(requests.get(f'http://api:4000/c/food/food_intake_information/"dinner"/{st.session_state["user_id"]}/').json())
+    
+    if df.empty:
+        st.write(f"#### Nothing logged yet!")
+    else:
+        for index, row in df.iterrows():
+            st.write(f"##### {row['name']}")
+            st.write(f"Calories: {row['calories']} calories")
+            st.write(f"Protein: {row['protein']}g")
+            st.write(f"Carbohydrates: {row['carbs']}g")
+            st.write(f"Fats: {row['fats']}g")
+    
+    
+    st.subheader("Snack")
+    df = pd.DataFrame(requests.get(f'http://api:4000/c/food/food_intake_information/"snack"/{st.session_state["user_id"]}/').json())
+    
+    if df.empty:
+        st.write(f"#### Nothing logged yet!")
+    else:
+        for index, row in df.iterrows():
+            st.write(f"##### {row['name']}")
+            st.write(f"Calories: {row['calories']} calories")
+            st.write(f"Protein: {row['protein']}g")
+            st.write(f"Carbohydrates: {row['carbs']}g")
+            st.write(f"Fats: {row['fats']}g")
+    
+    df = pd.DataFrame(requests.get(f'http://api:4000/c/food/food_intake_information/"other"/{st.session_state["user_id"]}/').json())
+    
+    if not df.empty:
+        st.subheader("Other")
+        
+        for index, row in df.iterrows():
+            st.write(f"##### {row['name']}")
+            st.write(f"Calories: {row['calories']} calories")
+            st.write(f"Protein: {row['protein']}g")
+            st.write(f"Carbohydrates: {row['carbs']}g")
+            st.write(f"Fats: {row['fats']}g")
