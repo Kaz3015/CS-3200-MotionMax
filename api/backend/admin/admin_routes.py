@@ -60,3 +60,51 @@ def get_all_support_tickets():
         return jsonify(tickets), 200
     except Exception as e:
         return {"error": str(e)}, 500
+
+    # ------------------------------------------------------------
+
+@admin.route('/users/<int:user_id>', methods=['GET'])
+def get_user_profile(user_id):
+    try:
+        cursor = db.get_db().cursor()
+        query = '''
+            SELECT user_id, first_name, last_name, email, gender,
+                   height_ft, height_in, weight, date_of_birth, role
+            FROM User
+            WHERE user_id = %s
+        '''
+
+        cursor.execute(query, (user_id,))
+        row = cursor.fetchone()
+
+        if row is None:
+            return jsonify({"error": "User not found"}), 404
+        return jsonify(row), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+   # ------------------------------------------------------------
+
+@admin.route('/users/search', methods=['GET'])
+def search_users_by_last_name():
+    try:
+        last_name = request.args.get('last_name')
+        if not last_name:
+            return jsonify({"error": "Missing 'last_name' parameter"}), 400
+
+        cursor = db.get_db().cursor()
+        query = '''
+               SELECT user_id, first_name, last_name, email, gender,
+                      height_ft, height_in, weight, date_of_birth, role
+               FROM User
+               WHERE last_name LIKE %s
+           '''
+        cursor.execute(query, (f"%{last_name}%",))
+        users = cursor.fetchall()
+
+        if not users:
+            return jsonify([]), 200
+        return jsonify(users), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
