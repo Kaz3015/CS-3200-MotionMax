@@ -84,3 +84,73 @@ with r2c1:
         for index in range(1, len(st.session_state['submitted_exercises'])):
             st.header(st.session_state['submitted_exercises'][index]['exercise_name'])
     
+with r2c2:
+    st.header("Workout Information")
+    
+    ir1c1, ir1c2 = st.columns([1, 1])
+    
+    with ir1c1:
+        st.write(f"Exercise Name: {st.session_state['exercise_name']}")
+        st.write(f"Difficulty: {st.session_state['exercise_difficulty']}")
+        st.write(f"Exercise Type: {st.session_state['exercise_type']}")
+        
+        
+    with ir1c2:
+        st.write(f"Muscle Group: {st.session_state['exercise_target_muscle']}")
+        st.write(f"Equipment: {st.session_state['exercise_equipment']}")
+        
+    for i in range(0, st.session_state['num_sets']):
+        st.subheader(f"Set #{i+1}")
+    
+        reps_input = st.number_input("Reps", 0, key=f"reps_{i+1}")
+        duration_input = st.number_input("Duration", 0, key=f"duration_{i+1}")
+        superset_input = st.checkbox("Superset?", False, key=f"superset_{i+1}")
+        rest_input = st.number_input("Rest", 0, key=f"rest_{i+1}")
+    
+    
+    ir2c1, ir2c2 = st.columns([1, 1])
+    
+    with ir2c1:
+        if st.button("Add Set"):
+            st.session_state['num_sets']+=1
+            
+            reps_input = 0
+            duration_input = 0
+            superset_input = False
+            rest_input = 0
+    with ir2c2:
+        if st.button("Submit Exercise"):
+            full_set_info = []
+            fail = False
+            
+            for i in range (0, st.session_state['num_sets']):
+                if st.session_state.get(f"reps_{i+1}") != 0 and st.session_state.get(f"duration_{i+1}") != 0:
+                    st.write(":red[You have conflicting information. A set has Reps and Duration as both non-zero numbers! Please fix before submitting!]")
+                    st.write(st.session_state.get(f"reps_{i+1}"))
+                    st.write(st.session_state.get(f"duration_{i+1}"))
+                    fail = True
+                    break
+                elif st.session_state.get(f"reps_{i+1}") != 0 and st.session_state.get(f"superset_{i+1}") != False:
+                    st.write(":red[You have conflicting information. A set has Reps and Superset as both non-zero numbers! Please fix before submitting!]")
+                    fail = True
+                    break
+                elif st.session_state.get(f"duration_{i+1}") != 0 and st.session_state.get(f"superset_{i+1}") != False:
+                    st.write(":red[You have conflicting information. A set has Duration and Superset as both non-zero numbers! Please fix before submitting!]")
+                    fail = True
+                    break
+                
+            if fail == False:
+                exercise_info = {
+                    "exercise_id": st.session_state["exercise_id"],
+                    "exercise_name": st.session_state["exercise_name"],
+                    "exercise_equipment": st.session_state["exercise_equipment"],
+                    "exercise_target_muscle": st.session_state["exercise_target_muscle"],
+                    "exercise_difficulty": st.session_state["exercise_difficulty"],
+                    "exercise_type": st.session_state["exercise_type"],
+                    "video_url": st.session_state["video_url"],
+                    "sets": full_set_info
+                }
+
+                st.session_state['submitted_exercises'].append(exercise_info)
+                st.session_state['num_sets'] = 1
+                     
