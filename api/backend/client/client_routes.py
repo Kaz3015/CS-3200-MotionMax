@@ -378,3 +378,50 @@ def all_nutrients_for_that_day(num_days, user_id):
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
+
+@client.route('/exercise/search-filter/name/equipment/muscle_group/difficulty/<difficulty>/exercise_type/<exercise_type>/', 
+              defaults={'name': '', 'equipment': '', 'muscle_group': ''}, methods=['GET'])
+@client.route('/exercise/search-filter/name/<name>/equipment/muscle_group/difficulty/<difficulty>/exercise_type/<exercise_type>/', 
+              defaults={'equipment': '', 'muscle_group': ''}, methods=['GET'])
+@client.route('/exercise/search-filter/name/equipment/<equipment>/muscle_group/difficulty/<difficulty>/exercise_type/<exercise_type>/', 
+              defaults={'name': '', 'muscle_group': ''}, methods=['GET'])
+@client.route('/exercise/search-filter/name/equipment/muscle_group/<muscle_group>/difficulty/<difficulty>/exercise_type/<exercise_type>/', 
+              defaults={'name': '', 'equipment': ''}, methods=['GET'])
+@client.route('/exercise/search-filter/name/<name>/equipment/<equipment>/muscle_group/difficulty/<difficulty>/exercise_type/<exercise_type>/', 
+              defaults={'muscle_group': ''}, methods=['GET'])
+@client.route('/exercise/search-filter/name/<name>/equipment/muscle_group/<muscle_group>/difficulty/<difficulty>/exercise_type/<exercise_type>/', 
+              defaults={'equipment': ''}, methods=['GET'])
+@client.route('/exercise/search-filter/name/equipment/<equipment>/muscle_group/<muscle_group>/difficulty/<difficulty>/exercise_type/<exercise_type>/', 
+              defaults={'name': ''}, methods=['GET'])
+@client.route('/exercise/search-filter/name/<name>/equipment/<equipment>/muscle_group/<muscle_group>/difficulty/<difficulty>/exercise_type/<exercise_type>/', methods=['GET'])
+def exercise_search(name, equipment, muscle_group, difficulty, exercise_type):
+    name = name.strip()
+    equipment = equipment.strip()
+    muscle_group = muscle_group.strip()
+    
+    params = [difficulty, exercise_type]
+
+    query = '''
+            SELECT e.exercise_id, e.name, e.equipment_needed, e.target_muscle, e.difficulty, e.exercise_type, e.video_url
+            FROM Exercise e
+            WHERE e.difficulty = %s AND e.exercise_type = %s
+        '''
+        
+    if name != "" and name != None:
+        query += " AND e.name LIKE CONCAT('%%', %s, '%%')"
+        params.append(name)
+    if equipment != "" and equipment != None:
+        query += " AND e.equipment_needed LIKE CONCAT('%%', %s, '%%')"
+        params.append(equipment)
+    if muscle_group != "" and muscle_group != None:
+        query += " AND e.target_muscle LIKE CONCAT('%%', %s, '%%')"
+        params.append(muscle_group)
+        
+    query += ";"    
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query, tuple(params))
+    theData = cursor.fetchall()
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
