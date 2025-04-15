@@ -19,9 +19,28 @@ def welcome():
     response.status_code = 200
     return response
 
+@simple_routes.route("/checktables")
+def check_tables():
+    try:
+        conn = db.connect()
+        cursor = conn.cursor()
+        cursor.execute("SELECT DATABASE();")
+        db_name = cursor.fetchone()["DATABASE()"]
+
+        cursor.execute("SHOW TABLES;")
+        tables = [row[f"Tables_in_{db_name}"] for row in cursor.fetchall()]
+        return {
+            "connected_to": db_name,
+            "tables": tables
+        }
+    except Exception as e:
+        return {"error": str(e)}, 500
+
+
 # ------------------------------------------------------------
 # /playlist returns the sample playlist data contained in playlist.py
 # (imported above)
+
 @simple_routes.route('/playlist')
 def get_playlist_data():
     current_app.logger.info('GET /playlist handler')
@@ -30,7 +49,7 @@ def get_playlist_data():
     return response
 
 # ------------------------------------------------------------
-@simple_routes.route('/niceMesage', methods = ['GET'])
+@simple_routes.route('/nicemessage', methods = ['GET'])
 def affirmation():
     message = '''
     <H1>Think about it...</H1>
