@@ -38,3 +38,17 @@ st.session_state["circuit_name"] = st.text_input("Circuit Name", value="No Name"
 st.session_state["circuit_description"] = st.text_input("Circuit Description", value="No Description")
 
 
+r1c1, r1c2 = st.columns([1, 1], border=True)
+
+with r1c1:
+    st.header("Search For Exercise")
+    search_input = st.text_input("Search", value="")
+    
+    st.header("Search Filter")
+    equipment = st.text_input("Equipment", value="", placeholder="")
+    muscle_group = st.text_input("Muscle Group", value="", placeholder="")
+    difficulty = st.selectbox("Difficulty", ("beginner", "intermediate", "advanced"), placeholder="beginner")
+    exercise_type = st.selectbox("Exercise Type", ("strength", "cardiovascular", "flexibility", "balance"), placeholder="strength")
+    
+df = pd.DataFrame(requests.get(f'http://api:4000/c/exercise/search-filter/name/{search_input}/equipment/{equipment}/muscle_group/{muscle_group}/difficulty/{difficulty}/exercise_type/{exercise_type}/').json())
+    
