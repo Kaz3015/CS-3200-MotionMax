@@ -188,3 +188,26 @@ with r2c2:
             st.write(f"Protein: {row['protein']}g")
             st.write(f"Carbohydrates: {row['carbs']}g")
             st.write(f"Fats: {row['fats']}g")
+            
+with r2c3:
+    st.header("Calorie Intake Over Time")
+    
+    num_days = st.slider("Chart Time Frame", 1, 30, 6)
+    nutrients_option = st.selectbox("Type of Nutrients", ("Calories", "Protein", "Carbohydrates", "Fats"), placeholder="Calories")
+    
+    df = pd.DataFrame(requests.get(f'http://api:4000/c/food/food_intake_information/all-nutrients-combined-for-day/{num_days}/{st.session_state["user_id"]}/').json())
+    
+    df['date'] = pd.to_datetime(df['Date'])
+    df = df.sort_values(by='Date')
+
+    st.line_chart(df, x='Date', y={nutrients_option}, x_label='Date', y_label={nutrients_option})
+    
+    st.write("")
+    st.write("")
+    st.write("")
+    st.write("")
+    
+    st.header("General Health Tips")
+    df = pd.DataFrame(requests.get(f'http://api:4000/c/health/tip/').json())
+    
+    st.write(df.iloc[0]['text'])    
