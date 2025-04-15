@@ -74,3 +74,13 @@ if 'exercise_dict' not in st.session_state:
     
 sets_dict = st.session_state["sets_dict"]
 exercise_dict = st.session_state["exercise_dict"]
+    
+r2c1, r2c2, r2c3 = st.columns([1, 1, 1], border=True)
+
+with r2c1:
+    st.header("Exercise")
+    
+    if len(st.session_state['submitted_exercises']) != 0:
+        for index in range(1, len(st.session_state['submitted_exercises'])):
+            st.header(st.session_state['submitted_exercises'][index]['exercise_name'])
+    
