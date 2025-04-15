@@ -52,3 +52,25 @@ with r1c1:
     
 df = pd.DataFrame(requests.get(f'http://api:4000/c/exercise/search-filter/name/{search_input}/equipment/{equipment}/muscle_group/{muscle_group}/difficulty/{difficulty}/exercise_type/{exercise_type}/').json())
     
+with r1c2:
+    for index, row in df.iterrows():
+        if st.button(f"{row['name']}\n\n" +
+                  f"Equipment: {row['equipment_needed']}\n\n" +
+                  f"Target Muscle: {row['target_muscle']}\n\n" +
+                  f"Difficulty: {row['difficulty']}\n\n" +
+                  f"Exercise Type: {row['exercise_type']}"):
+            st.session_state['exercise_id'] = row['exercise_id']
+            st.session_state['exercise_name'] = row['name']
+            st.session_state['exercise_equipment'] = row['equipment_needed']
+            st.session_state['exercise_target_muscle'] = row['target_muscle']
+            st.session_state['exercise_difficulty'] = row['difficulty']
+            st.session_state['exercise_type'] = row['exercise_type']
+            st.session_state['video_url'] = row['video_url']
+  
+if 'sets_dict' not in st.session_state:
+    st.session_state['sets_dict'] = {}
+if 'exercise_dict' not in st.session_state:
+    st.session_state['exercise_dict'] = {}
+    
+sets_dict = st.session_state["sets_dict"]
+exercise_dict = st.session_state["exercise_dict"]
