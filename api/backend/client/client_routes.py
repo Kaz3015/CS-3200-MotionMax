@@ -426,18 +426,25 @@ def exercise_search(name, equipment, muscle_group, difficulty, exercise_type):
     response.status_code = 200
     return response
 
-
-@client.route('/insert/default_user_circuit/<user_id>', methods=['GET'])
-def insert_default_user_circuit(user_id):
-    query = f'''
-            INSERT INTO Circuit(user_id, created_by, name, description, circuit_type, difficulty, target_muscle, equipment_needed)
-                VALUES
-                ({user_id}, {user_id}, 'No Name', 'No Description', 'strength', 'beginner', 'No Target Muscle', 'No Equipment Needed'),
-        ''' 
+@client.route('/insert/circuit/<user_id>/<circuit_name>/<circuit_description>/', methods=["POST"])
+def insert_circuit(user_id, circuit_name, circuit_description):
+    query = '''
+        INSERT INTO Circuit(user_id, created_by, name, description, circuit_type, difficulty, target_muscle, equipment_needed)
+        VALUES (%s, %s, %s, %s, 'strength', 'beginner', 'No Target Muscle', 'No Equipment Needed')
+    '''
     
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    theData = cursor.fetchall()
-    response = make_response(jsonify(theData))
-    response.status_code = 200
+    connection = db.get_db()
+    cursor = connection.cursor()
+    try:
+        cursor.execute(query, (user_id, user_id, circuit_name, circuit_description))
+        connection.commit()
+        # Return a success message (no rows are returned by an INSERT)
+        response = make_response(jsonify({"status": "success", "message": "Circuit inserted successfully."}))
+        response.status_code = 200
+    except Exception as e:
+        connection.rollback()
+        response = make_response(jsonify({"error": str(e)}))
+        response.status_code = 400
+    finally:
+        cursor.close()
     return response
