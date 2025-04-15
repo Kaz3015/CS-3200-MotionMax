@@ -425,3 +425,19 @@ def exercise_search(name, equipment, muscle_group, difficulty, exercise_type):
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
+
+
+@client.route('/insert/default_user_circuit/<user_id>', methods=['GET'])
+def insert_default_user_circuit(user_id):
+    query = f'''
+            INSERT INTO Circuit(user_id, created_by, name, description, circuit_type, difficulty, target_muscle, equipment_needed)
+                VALUES
+                ({user_id}, {user_id}, 'No Name', 'No Description', 'strength', 'beginner', 'No Target Muscle', 'No Equipment Needed'),
+        ''' 
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
