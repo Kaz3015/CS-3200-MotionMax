@@ -60,7 +60,7 @@ def get_all_user_made_workouts(user_id):
     response.status_code = 200
     return response
 
-@client.route('/workouts/by-trainer/<client_user_id>', methods=['GET'])
+@client.route('/workouts/by-trainer/<client_user_id>/', methods=['GET'])
 def get_all_trainer_made_workouts_for_user(client_user_id):
     query = f'''
         SELECT c.name, c.description
@@ -78,21 +78,16 @@ def get_all_trainer_made_workouts_for_user(client_user_id):
 
 
 
-
-
-
-
-
-@client.route('/workouts/currently-scheduled-exercises/<user_id>', methods=['GET'])
-def all_scheduled_e(user_id):
+@client.route('/workouts/currently-scheduled-exercises/<user_id>/', methods=['GET'])
+def all_scheduled_exercises(user_id):
     query = f'''
-        SELECT e.name, es.weight, es.reps, es.duration_seconds, es.is_superset, es.rest_seconds, es.completed
+        SELECT c.name AS `CircuitName`, c.target_muscle, e.name, es.weight, es.reps, es.duration_seconds, es.is_superset, es.rest_seconds, es.completed, es.set_order
         FROM Circuit c
             JOIN User u ON c.user_id = u.user_id
             JOIN Exercise e ON c.circuit_id = e.circuit_id
             JOIN ExerciseSet es ON e.exercise_id = es.exercise_id
         WHERE c.scheduled_date = CURRENT_DATE AND u.user_id = {user_id}
-        ORDER BY c.circuit_id, es.set_order;
+        ORDER BY c.circuit_id, e.name, es.set_order;
     '''
     
     cursor = db.get_db().cursor()
@@ -103,22 +98,37 @@ def all_scheduled_e(user_id):
     return response
 
 
+@client.route('/test/<user_id>', methods=['GET'])
+def blagkwfannfa(user_id):
+    query = f'''
+    SELECT c.name
+        FROM Circuit c
+            JOIN User u ON c.user_id = u.user_id
+        WHERE u.user_id = {user_id}
+        ''' 
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
 
 
 
-
-@client.route('/workouts/currently-scheduled/next-exercise/<user_id>', methods=['GET'])
+@client.route('/workouts/currently-scheduled/next-exercise/<user_id>/', methods=['GET'])
 def next_up_workout_exercise_information(user_id):
     query = f'''
-        SELECT e.name, e.personal_notes, e.video_url
+        SELECT e.name, e.personal_notes, e.video_url, e.target_muscle, es.reps, es.duration_seconds, es.is_superset, es.weight, es.rest_seconds
         FROM Exercise e
             JOIN Circuit c ON e.circuit_id = c.circuit_id
             JOIN User u ON c.user_id = u.user_id
             JOIN ExerciseSet es ON e.exercise_id = es.exercise_id
         WHERE c.scheduled_date = CURRENT_DATE AND u.user_id = {user_id}
-        GROUP BY e.exercise_id, e.name
+        GROUP BY e.exercise_id, es.set_order, e.name, e.personal_notes, e.video_url, e.target_muscle,
+            es.reps, es.duration_seconds, es.is_superset, es.weight, es.rest_seconds
         HAVING COUNT(*) > SUM(IF(es.completed = TRUE, 1, 0))
-        ORDER BY e.exercise_id
+        ORDER BY e.exercise_id, es.set_order
         LIMIT 1;
     '''
     
@@ -130,7 +140,7 @@ def next_up_workout_exercise_information(user_id):
     return response
 
 @client.route('/equipment-based-search/', defaults={'equipment_string': ''}, methods=['GET'])
-@client.route('/equipment-based-search/<equipment_string>', methods=['GET'])
+@client.route('/equipment-based-search/<equipment_string>/', methods=['GET'])
 def make_equipment_based_search(equipment_string):
     cursor = None
     cursor = db.get_db().cursor()
@@ -194,7 +204,7 @@ def make_difficulty_based_search(beginner, intermediate, advanced):
 
 
 @client.route('/target-muscle-based-search/', defaults={'target_muscle_string': ''}, methods=['GET'])
-@client.route('/target-muscle-based-search/<target_muscle_string>', methods=['GET'])
+@client.route('/target-muscle-based-search/<target_muscle_string>/', methods=['GET'])
 def make_target_muscle_based_search(target_muscle_string):
     cursor = None
     cursor = db.get_db().cursor()
@@ -225,7 +235,7 @@ def make_target_muscle_based_search(target_muscle_string):
 
 
 @client.route('/exercise-type-based-search/', defaults={'exercise_type_string': ''}, methods=['GET'])
-@client.route('/exercise-type-based-search/<exercise_type_string>', methods=['GET'])
+@client.route('/exercise-type-based-search/<exercise_type_string>/', methods=['GET'])
 def make_exercise_type_based_search(exercise_type_string):
     cursor = None
     cursor = db.get_db().cursor()
@@ -255,7 +265,7 @@ def make_exercise_type_based_search(exercise_type_string):
    
    
    
-@client.route('/workouts/next-scheduled/video-url/<user_id>', methods=['GET'])
+@client.route('/workouts/next-scheduled/video-url/<user_id>/', methods=['GET'])
 def next_up_workout_exercise_video_url(user_id):
     query = f'''
         SELECT e.name, e.video_url
@@ -309,7 +319,7 @@ def get_motivation_tip():
     response.status_code = 200
     return response
 
-@client.route('/health/today-meal-breakdown/<user_id>', methods=['GET'])
+@client.route('/health/today-meal-breakdown/<user_id>/', methods=['GET'])
 def todays_meal_breakdown(user_id):
     query = f'''
         SELECT fl.meal_type, SUM(fi.calories) AS `calories`, SUM(fi.protein) AS `protein`, SUM(fi.carbs) AS `carbs`, SUM(fi.fats) AS `fats`
@@ -319,6 +329,27 @@ def todays_meal_breakdown(user_id):
             JOIN FoodItem fi on flfi.food_item_id = fi.food_item_id
         WHERE fl.date_logged = CURRENT_DATE AND u.user_id = {user_id}
         GROUP BY fl.meal_type;
+    '''
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+
+
+   
+@client.route('/food/food_intake_information/<meal_type>/<user_id>/', methods=['GET'])
+def food_intake_information(meal_type, user_id):
+    query = f'''
+        SELECT log.meal_type, item.name, item.calories, item.protein, item.carbs, item.fats
+        FROM FoodLog log
+            JOIN FoodLog_FoodItem logItem ON log.food_log_id = logItem.food_log_id
+            JOIN FoodItem item ON logItem.food_item_id = item.food_item_id
+            JOIN User u ON log.user_id = u.user_id
+        WHERE log.date_logged = CURRENT_DATE AND u.user_id = {user_id} AND log.meal_type = {meal_type}
+        ORDER BY log.meal_type;
     '''
     
     cursor = db.get_db().cursor()
