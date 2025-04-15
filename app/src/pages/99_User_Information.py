@@ -110,3 +110,14 @@ with r1c3:
     df = pd.DataFrame(requests.get(f'http://api:4000/c/motivation/tip/').json())
     
     st.write(df.iloc[0]['text'])
+    
+
+r2c1, r2c2, r2c3 = st.columns([1, 3, 1], border=True)
+
+with r2c1:
+    st.header("List of Trainer Workouts for You")
+    df = pd.DataFrame(requests.get(f'http://api:4000/c/workouts/by-trainer/{st.session_state["user_id"]}').json())
+    
+    for index, row in df.iterrows():
+        st.button(row['name'])
+        
