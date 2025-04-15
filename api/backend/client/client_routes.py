@@ -358,3 +358,23 @@ def food_intake_information(meal_type, user_id):
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
+
+@client.route('/food/food_intake_information/all-nutrients-combined-for-day/<num_days>/<user_id>/', methods=['GET'])
+def all_nutrients_for_that_day(num_days, user_id):
+    query = f'''
+        SELECT log.date_logged AS `Date`, SUM(item.calories) AS `Calories`, SUM(item.protein) AS `Protein`, SUM(item.carbs) AS `Carbohydrates`, SUM(item.fats) AS `Fats`
+        FROM FoodLog log
+            JOIN FoodLog_FoodItem logItem ON log.food_log_id = logItem.food_log_id
+            JOIN FoodItem item ON logItem.food_item_id = item.food_item_id
+            JOIN User u ON log.user_id = u.user_id
+        WHERE log.date_logged BETWEEN DATE_SUB(CURRENT_DATE, INTERVAL {num_days} DAY) AND CURRENT_DATE AND u.user_id = {user_id}
+        GROUP BY log.date_logged
+        ORDER BY log.date_logged;
+    '''
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
