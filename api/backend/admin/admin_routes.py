@@ -108,3 +108,34 @@ def search_users_by_last_name():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+# ------------------------------------------------------------
+
+@admin.route('/users/<int:user_id>', methods=['PUT'])
+def update_user_profile(user_id):
+    try:
+        data = request.json
+
+        query = f"""
+            UPDATE User
+            SET first_name='{data["first_name"]}', 
+                last_name='{data["last_name"]}', 
+                email='{data["email"]}', 
+                gender='{data["gender"]}',
+                height_ft='{data["height_ft"]}', 
+                height_in='{data["height_in"]}', 
+                weight='{data["weight"]}', 
+                date_of_birth='{data["date_of_birth"]}',
+                role='{data["role"]}'
+            WHERE user_id={user_id}
+        """
+
+        cursor = db.get_db().cursor()
+        cursor.execute(query)
+        db.get_db().commit()
+        return jsonify({"message": "User profile updated successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
