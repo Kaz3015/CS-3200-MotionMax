@@ -51,6 +51,6 @@ Documentation for setting up and understanding the project.
 
 ### 1. Clone the Repository
 ```bash
-git clone <>
+git clone https://github.com/Kaz3015/CS-3200-MotionMax.git
 cd <repository-folder>
 run command: docker compose -f docker-compose.yaml up 
