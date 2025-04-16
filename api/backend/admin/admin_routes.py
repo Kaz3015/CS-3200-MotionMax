@@ -139,3 +139,41 @@ def update_user_profile(user_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@admin.route("/maintenance", methods=["GET"])
+def get_maintenance_status():
+    try:
+        cursor = db.get_db().cursor()
+        cursor.execute("SELECT setting_value "
+                       "FROM App_State "
+                       "WHERE setting_key = 'maintenance_mode'")
+        result = cursor.fetchone()
+        if result and "setting_value" in result:
+            is_on = result["setting_value"] == "on"
+        return jsonify({"maintenance_mode": is_on}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@admin.route("/maintenance", methods=["PUT"])
+def update_maintenance_status():
+    try:
+        data = request.get_json()
+        new_value = data.get("maintenance_mode")
+
+        if new_value:
+            value_str = "on"
+        else:
+            value_str = "off"
+
+        cursor = db.get_db().cursor()
+        cursor.execute(
+            "UPDATE App_State "
+            "SET setting_value = %s "
+            "WHERE setting_key = 'maintenance_mode'", (value_str,)
+        )
+        db.get_db().commit()
+
+        return jsonify({"message": f"Maintenance mode set to {value_str}"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

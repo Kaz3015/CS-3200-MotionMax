@@ -225,3 +225,8 @@ VALUES
     (3, 2, 5.00, '2025-04-05', '2025-04-20'),
     (4, 4, 20.00, '2025-03-01', '2025-03-31'),
     (5, 1, 12.75, '2025-04-10', '2025-05-10');
+
+-- App State for Maintenance
+
+INSERT INTO App_State (setting_key, setting_value)
+VALUES ('maintenance_mode', 'off');

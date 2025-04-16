@@ -75,3 +75,8 @@ CREATE TABLE Support_Tickets (
     CONSTRAINT fk_support_tickets_user_resolver
         FOREIGN KEY (resolved_by_admin) REFERENCES User(user_id)
 );
+
+CREATE TABLE App_State (
+    setting_key VARCHAR(50) PRIMARY KEY,
+    setting_value VARCHAR(50)
+);
