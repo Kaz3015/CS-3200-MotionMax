@@ -68,15 +68,14 @@ with r1c1:
     #Additional filter inputs
     equipment = st.text_input("Equipment", value="", placeholder="")
     muscle_group = st.text_input("Muscle Group", value="", placeholder="")
-    difficulty = st.selectbox("Difficulty", ("all", "beginner", "intermediate", "advanced"), placeholder="beginner")
-    exercise_type = st.selectbox("Exercise Type", ("all", "strength", "cardiovascular", "flexibility", "balance"), placeholder="strength")
+    difficulty = st.selectbox("Difficulty", ("beginner", "intermediate", "advanced", "all"), placeholder="beginner")
+    exercise_type = st.selectbox("Exercise Type", ("strength", "cardiovascular", "flexibility", "balance", "all"), placeholder="strength")
     
 #Fetch exercises based on the filters
 df = pd.DataFrame(requests.get(f'http://api:4000/c/exercise/search-filter/name/{search_input}/equipment/{equipment}/muscle_group/{muscle_group}/difficulty/{difficulty}/exercise_type/{exercise_type}/').json())
     
 #Right column: Iterating through found exercises
 with r1c2:
-    
     #Display each returned exercise as a button which updates the currently editing exercise if clicked
     for index, row in df.iterrows():
         if st.button(f"{row['name']}\n\n" +
@@ -87,6 +86,7 @@ with r1c2:
                   key=f"select_ex_{row['exercise_id']}"):
             st.session_state['exercise_id'] = row['exercise_id']
             st.session_state['exercise_name'] = row['name']
+            st.session_state['exercise_description'] = row['description']
             st.session_state['exercise_equipment'] = row['equipment_needed']
             st.session_state['exercise_target_muscle'] = row['target_muscle']
             st.session_state['exercise_difficulty'] = row['difficulty']
@@ -252,8 +252,8 @@ with r2c2:
                 st.session_state['exercise_equipment'] = 'default'
                 st.session_state['exercise_target_muscle'] = 'default'
                 st.session_state['exercise_difficulty'] = 'beginner'
+                st.session_state['exercise_description'] = 'default'
                 st.session_state['exercise_type'] = 'strength'
-                st.session_state['exericse_description'] = 'default'
                 st.session_state['exercise_personal_notes'] = 'default'
                 st.session_state['video_url'] = 'example.com'
                 st.session_state['reset_sets'] = True
@@ -279,10 +279,7 @@ if st.button("Submit Circuit"):
     
     if len(st.session_state["submitted_exercises"]) == 0:
         st.write(":red[There must be atleast one workout!]")
-    else:
-        for idx, exercise in enumerate(st.session_state["submitted_exercises"]):
-            exercise['sets']
-        
+    else:        
         if st.session_state["circuit_name"] == None:
             st.write(":red[Please specify a circuit name!]")
         elif st.session_state["circuit_description"] == None:
