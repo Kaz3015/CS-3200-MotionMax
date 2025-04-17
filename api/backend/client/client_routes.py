@@ -513,3 +513,22 @@ def insert_exercise_to_circuit(circuit_id):
         cursor.close()
     return response
     
+@client.route('/select/last_exercise_added_to_circuit/<user_id>/<circuit_id>/', methods=["GET"])
+def get_last_exercise_added_to_circuit(user_id, circuit_id):
+    query = f'''
+        SELECT e.exercise_id, e.name
+        FROM Circuit c
+            JOIN Exercise e ON c.circuit_id = e.circuit_id
+            JOIN User u ON c.user_id = u.user_id
+        WHERE u.user_id = {user_id} AND c.circuit_id = {circuit_id}  
+        ORDER BY e.exercise_id DESC
+        LIMIT 1;
+    '''
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+    
