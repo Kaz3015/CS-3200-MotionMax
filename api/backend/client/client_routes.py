@@ -5,9 +5,6 @@ from flask import make_response
 from flask import current_app
 from backend.db_connection import db
 
-#------------------------------------------------------------
-# Create a new Blueprint object, which is a collection of 
-# routes.
 client = Blueprint('client', __name__)
 
 @client.route('/<first_name>/<last_name>/', methods=['GET'])
@@ -15,34 +12,16 @@ def get_client_id(first_name, last_name):
     query = f'''
         SELECT  u.user_id
         FROM User u
-        WHERE u.first_name = {first_name} AND u.last_name = {last_name} AND u.role = 'client'
+        WHERE u.first_name = '{first_name}' AND u.last_name = '{last_name}' AND u.role = 'client'
         LIMIT 1;
     '''
     
-    # get a cursor object from the database
     cursor = db.get_db().cursor()
-
-    # use cursor to query the database for a list of products
     cursor.execute(query)
-
-    # fetch all the data from the cursor
-    # The cursor will return the data as a 
-    # Python Dictionary
     theData = cursor.fetchone()
-
-    # Create a HTTP Response object and add results of the query to it
-    # after "jasonify"-ing it.
     response = make_response(jsonify(theData))
-    # set the proper HTTP Status code of 200 (meaning all good)
     response.status_code = 200
-    # send the response back to the client
     return response
-
-
-
-
-
-
 
 @client.route('/workouts/by-client/<user_id>/', methods=['GET'])
 def get_all_user_made_workouts(user_id):
