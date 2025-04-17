@@ -113,7 +113,7 @@ if not maintenance_mode:
         st.session_state['authenticated'] = True
         st.session_state['role'] = 'sales'
         st.session_state['user_id'] = 2
-        st.switch_page('pages/feedback_survey_output.py')
+        st.switch_page('pages/CAC_LTV.py')
 
 
 

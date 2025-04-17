@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import requests
 import logging
 import altair as alt
+from modules.nav import SideBarLinks
+SideBarLinks(show_home=True)
 
 # Function to get subscriber data from API
 def get_subscriber_data():
@@ -66,7 +68,7 @@ if response.status_code == 200:
 st.title("MotionMAX Revenue")
 
 df = pd.DataFrame(data)
-
+df
 # Make sure month is numeric
 df['month'] = pd.to_numeric(df['month'])
 

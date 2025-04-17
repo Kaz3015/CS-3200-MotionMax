@@ -2,6 +2,8 @@ import streamlit as st
 import requests
 import pandas as pd
 import logging
+from modules.nav import SideBarLinks
+SideBarLinks(show_home=True)
 
 st.title("MotionMAX App Feedback Results")
 st.write("View all user feedback submissions for the MotionMAX application.")

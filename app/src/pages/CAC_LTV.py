@@ -5,6 +5,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import requests
 import logging
+from modules.nav import SideBarLinks
+
+SideBarLinks(show_home=True)
 
 row1 = st.columns(2)
 with row1[0]:
