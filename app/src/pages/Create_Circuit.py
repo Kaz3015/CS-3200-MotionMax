@@ -11,6 +11,7 @@ import pandas as pd
 #page configurations
 st.set_page_config(layout="wide")
 
+#Initialization of session states
 if 'exercise_id' not in st.session_state:
     st.session_state['exercise_id'] = None
 if 'exercise_name' not in st.session_state:
@@ -42,30 +43,41 @@ if 'circuit_scheduled_date' not in st.session_state:
 if 'reset_sets' not in st.session_state:
     st.session_state['reset_sets'] = False
 
+#Back button
 if st.button("Back"):
     st.switch_page("pages/User_Information.py")
 
+#Create text inputs for circuit information
 st.session_state["circuit_name"] = st.text_input("Circuit Name", value="No Name")
 st.session_state["circuit_description"] = st.text_input("Circuit Description", value="No Description")
 st.session_state["circuit_scheduled_date"] = st.date_input("Scheduled Date", value="today", min_value="today")
 
+#Temporary array for building sets (holds a dictionary)
 full_set_info = []
 
+#Two columns 
 r1c1, r1c2 = st.columns([1, 1], border=True)
 
+#Left column: Searching for Exercises
 with r1c1:
     st.header("Search For Exercise")
+    #Text input for the name of the exercise
     search_input = st.text_input("Search", value="")
     
     st.header("Search Filter")
+    #Additional filter inputs
     equipment = st.text_input("Equipment", value="", placeholder="")
     muscle_group = st.text_input("Muscle Group", value="", placeholder="")
     difficulty = st.selectbox("Difficulty", ("all", "beginner", "intermediate", "advanced"), placeholder="all")
     exercise_type = st.selectbox("Exercise Type", ("all", "strength", "cardiovascular", "flexibility", "balance"), placeholder="strength")
     
+#Fetch exercises based on the filters
 df = pd.DataFrame(requests.get(f'http://api:4000/c/exercise/search-filter/name/{search_input}/equipment/{equipment}/muscle_group/{muscle_group}/difficulty/{difficulty}/exercise_type/{exercise_type}/').json())
     
+#Right column: Iterating through found exercises
 with r1c2:
+    
+    #Display each returned exercise as a button which updates the currently editing exercise if clicked
     for index, row in df.iterrows():
         if st.button(f"{row['name']}\n\n" +
                   f"Equipment: {row['equipment_needed']}\n\n" +
@@ -80,20 +92,15 @@ with r1c2:
             st.session_state['exercise_difficulty'] = row['difficulty']
             st.session_state['exercise_type'] = row['exercise_type']
             st.session_state['video_url'] = row['video_url']
-  
-if 'sets_dict' not in st.session_state:
-    st.session_state['sets_dict'] = {}
-if 'exercise_dict' not in st.session_state:
-    st.session_state['exercise_dict'] = {}
     
-sets_dict = st.session_state["sets_dict"]
-exercise_dict = st.session_state["exercise_dict"]
-    
+#Second row of 3 columns
 r2c1, r2c2, r2c3 = st.columns([1, 1, 1], border=True)
 
+#Row 2 left column: Submitted exercises for circuit
 with r2c1:
     st.header("Exercise")
     
+    #Show excercises already added to the circuit
     if len(st.session_state['submitted_exercises']) != 0:
         for index in range(0, len(st.session_state['submitted_exercises'])):
             st.subheader(f"#{index + 1}: {st.session_state['submitted_exercises'][index]['exercise_name']}")
@@ -114,12 +121,16 @@ with r2c1:
     else:
         st.write("No exercises recorded yet!")
     
+#Row 2 middle column: Exercise Information
 with r2c2:
-    st.header("Workout Information")
+    st.header("Exercise Information")
     
+    #Inner columns
     ir1c1, ir1c2 = st.columns([1, 1])
     
+    #Inner left column: Editable Exercise Information
     with ir1c1:
+        #Editable Exercise Details
         exercise_name = st.text_input("Exercise Name", value=st.session_state.get("exercise_name", "default"), key="workout_exercise_name")
 
         exercise_description = st.text_input("Exercise Description", value=st.session_state.get("exercise_description", "default"), key="workout_exercise_description")
@@ -139,11 +150,14 @@ with r2c2:
         st.session_state["exercise_difficulty"] = exercise_difficulty
         st.session_state["exercise_type"] = exercise_type
         
+    #Right Inner Column: Editable Exercise Details
     with ir1c2:
+        #Editable Exercise Information
         st.text_input("Exercise Personal Notes", value=st.session_state.get("exercise_personal_notes", "default"))
         st.text_input("Exercise Target Muscle", value=st.session_state.get("exercise_target_muscle", "default"))
         st.text_input("Exercise Equipment", value=st.session_state.get("exercise_equipment", "default"))
         
+    #Reset individual set inputs if requested
     if st.session_state["reset_sets"]:
         st.session_state["weight_1"]   = 0
         st.session_state["reps_1"]     = 0
@@ -152,6 +166,7 @@ with r2c2:
         st.session_state["rest_1"]     = 0
         st.session_state["reset_sets"] = False
         
+    #Render respective inputs for each set
     for i in range(0, st.session_state['num_sets']):
         st.subheader(f"Set #{i+1}")
     
@@ -161,10 +176,12 @@ with r2c2:
         superset_input = st.checkbox("Superset?", False, key=f"superset_{i+1}")
         rest_input = st.number_input("Rest (s)", 0, key=f"rest_{i+1}")
     
-    
+    #Inner columns
     ir2c1, ir2c2 = st.columns([1, 1])
     
+    #Inner Row 2 left column: Adding Set Button
     with ir2c1:
+        #Add another blank set
         if st.button("Add Set"):
             st.session_state['num_sets']+=1
             
@@ -174,10 +191,14 @@ with r2c2:
             superset_input = False
             rest_input = 0
         
+    #Inner Row 2 Right Column: Submit Exercise
     with ir2c2:
+        
+        #Button to finalize the current exercise and respective sets
         if st.button("Submit Exercise"):
             fail = False
             
+            #Ensure sets meet the conditions and validate
             for i in range (0, st.session_state['num_sets']):
                 if st.session_state.get(f"reps_{i+1}") == 0 and st.session_state.get(f"duration_{i+1}") == 0 and st.session_state.get(f"superset_{i+1}") == False:
                     st.write(":red[You have conflicting information. Reps and duration are set to 0 while superset is set to false. Please establish a valid set tracker before submitting!]")
@@ -198,6 +219,7 @@ with r2c2:
                     fail = True
                     break
                 
+                #If valid, collect and append set info
                 new_set = {
                     "weight": st.session_state.get(f"weight_{i+1}"),
                     "reps": st.session_state.get(f"reps_{i+1}"),
@@ -208,6 +230,7 @@ with r2c2:
                 
                 full_set_info.append(new_set)
                 
+            #If sets are valid, append the exercise to the circuit
             if fail == False:
                 exercise_info = {
                     "exercise_id": st.session_state["exercise_id"],
@@ -222,6 +245,7 @@ with r2c2:
                     "sets": full_set_info
                 }
 
+                #Set session states back to defaults
                 st.session_state['submitted_exercises'].append(exercise_info)
                 st.session_state['num_sets'] = 1
                 st.session_state['exercise_name'] = 'default'
@@ -233,10 +257,12 @@ with r2c2:
                 st.session_state['exercise_personal_notes'] = 'default'
                 st.session_state['video_url'] = 'example.com'
                 st.session_state['reset_sets'] = True
-                     
+                
+#Row 2 Right Column: Technique Video     
 with r2c3:
     st.header("Technique Video")
     
+    #Show video preview if a URL is present
     if st.session_state['video_url'] == None:
         st.write("There's no associated video url! Please add one!")
     else:
@@ -248,6 +274,7 @@ with r2c3:
         except Exception:
             st.write("This URL is not valid! Please find another one!")
         
+#Submit Circuit button
 if st.button("Submit Circuit"):
     
     if len(st.session_state["submitted_exercises"]) == 0:
@@ -261,20 +288,26 @@ if st.button("Submit Circuit"):
         elif st.session_state["circuit_description"] == None:
             st.write(":red[Please specify a circuit description!]")
         
+        #Request to create a circuit
         circuit_response = requests.post(f"http://api:4000/c/insert/circuit/{st.session_state['user_id']}/{st.session_state['circuit_name']}/{st.session_state['circuit_description']}/{st.session_state['circuit_scheduled_date']}").json()
         
         if circuit_response.get('status') == 'success':
+            #Grab the created circuit id
             circuit_id = (pd.DataFrame(requests.get(f"http://api:4000/c/select/newly-made-circuit-id/{st.session_state['user_id']}/").json())).iloc[0]['circuit_id']
         
+            #Add each exercise and its sets to the circuit
             for index, exercise in enumerate(st.session_state["submitted_exercises"]):
                 exercise_response = requests.post(f"http://api:4000/c/insert/exercise_to_circuit/{circuit_id}/", json=exercise).json()
 
+                #Fetch the last added exercise
                 df = pd.DataFrame(requests.get(f"http://api:4000/c/select/last_exercise_added_to_circuit/{st.session_state['user_id']}/{circuit_id}/").json())
                 exercise_id = df.iloc[0]['exercise_id']
                 
+                #Add sets to the last added exercise
                 for index, e_set in enumerate(exercise["sets"]):
                     exercise_set_response = requests.post(f"http://api:4000/c/insert/exercise_set_to_circuit/{exercise_id}/{index + 1}/{e_set['weight']}/{e_set['reps']}/{e_set['duration']}/{e_set['superset']}/{e_set['rest']}/").json()
                 
+                #Reset session states to defaults
                 st.session_state['exercise_name'] = 'default'
                 st.session_state['exercise_equipment'] = 'default'
                 st.session_state['exercise_target_muscle'] = 'default'
@@ -291,8 +324,7 @@ if st.button("Submit Circuit"):
                 st.session_state['reset_sets'] = False
                 st.session_state['video_url'] = 'example.com'          
             
+            #Redirect back to the main page
             st.switch_page('pages/User_Information.py')
         else:
             st.write(circuit_response.get('message'))
-        
-        
