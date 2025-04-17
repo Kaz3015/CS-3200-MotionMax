@@ -17,7 +17,6 @@ def init_navigation():
     with marketing_expander:
         st.page_link("marketing_channel.py", label="Marketing Channels", icon="📊")
         st.page_link("marketing_channel_performance.py", label="Channel Performance", icon="📈")
-        st.page_link("marketing_channels.py", label="All Channels", icon="🔍")
 
     # User data section
     user_expander = st.sidebar.expander("User Data", expanded=False)
