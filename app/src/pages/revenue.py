@@ -3,6 +3,13 @@ import pandas as pd
 import datetime
 import requests
 
+url = "http://api:4000/s/revenue"
+#send a get request to the API
+response = requests.get(url)
+#if the request is successful return the JSON data
+if response.status_code == 200:
+    data = response.json()
+
 st.title("MotionMAX Revenue")
 
 # Create sample revenue data
@@ -31,10 +38,5 @@ if len(revenue_values) > 0:
     #use streamlit metric and show a compact summary value at the top
     st.metric("Current Revenue", f"{current_revenue:.2f}x")
 
-#make the API endpoint url to get the revenue
-url = "http://api:4000/s/revenue"
-#send a get request to the API
-response = requests.get(url)
-#if the request is successful return the JSON data
-if response.status_code == 200:
-    data = response.json()
+
+
