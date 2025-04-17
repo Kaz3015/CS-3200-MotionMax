@@ -89,9 +89,9 @@ CREATE TABLE RecipeIngredient (
     ing_id INT NOT NULL,
     amount FLOAT,
     measurement VARCHAR(10),
-    PRIMARY KEY(r_id, ing_id),
+    PRIMARY KEY (r_id, ing_id),
     FOREIGN KEY (r_id) REFERENCES Recipe(r_id) ON DELETE CASCADE,
-    FOREIGN KEY (ing_id) REFERENCES Ingredients(ing_id) ON DELETE CASCADE
+    FOREIGN KEY (ing_id) REFERENCES Ingredients(ing_id)
 );
 
 CREATE TABLE Subscription (

@@ -27,7 +27,7 @@ st.session_state['authenticated'] = False
 # the links displayed on the left-side panel. 
 # IMPORTANT: ensure src/.streamlit/config.toml sets
 # showSidebarNavigation = false in the [client] section
-SideBarLinks(show_home=True)
+SideBarLinks(show_home=False)
 
 # ***************************************************
 #    The major content of this page
@@ -59,8 +59,18 @@ if st.button("Act as John, a Political Fitness Trainer",
     st.session_state['user_id'] = requests.get('http://api:4000/t').json()['user_id']
     st.session_state['subscriber_id'] = requests.get('http://api:4000/t').json()['subscriber_id']
     st.session_state['doubleClicked'] = False
+    st.session_state['form'] = "workout form"
+    st.session_state['used_ingredients'] = []
+    st.session_state['ingredient names'] = []
+    st.session_state['existing recipe'] = False
+    st.session_state['recipe_title'] = None
+    st.session_state['workout_loaded'] = False
+    st.session_state['added_ingredients'] = []
+    st.session_state['recipe_id'] = None
     logger.info("Logging in as Fitness Trainer Persona")
-    st.switch_page('pages/00_Pol_Strat_Home.py')
+    logger.info(f"User ID: {st.session_state['user_id']}")
+    logger.info(f"Subscriber ID: {st.session_state['subscriber_id']}")
+    st.switch_page('pages/Trainer_info_page.py')
 
 if st.button('Act as Mohammad, an USAID worker', 
             type = 'primary', 
