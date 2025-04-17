@@ -92,7 +92,7 @@ def post_feedback_survey():
     return response
 
 #------------------------------------------------------------
-# Get Customer Aquisition cost
+# Get Customer Aquisition cost of the users
 @sales.route('/CA_cost', methods=['GET'])
 def get_customer_aquisition_cost():
     query = """
