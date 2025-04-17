@@ -28,10 +28,11 @@ if search_mode == "User ID":
         url = f"http://web-api:4000/a/users/{user_id}"
         response = requests.get(url)
         if response.status_code == 200:
-            st.session_state['search'] = True
             user = response.json()
             st.session_state['selected_user'] = user
+            st.session_state["user_list"] = [user]
             st.session_state["edit_mode"] = False
+            st.session_state['search'] = True
             st.success("User profile found")
             selected_user = user
         elif response.status_code == 404:
@@ -53,23 +54,47 @@ else:
                 users = response.json()
                 if users:
                     st.success(f"Found {len(users)} user(s)")
-                    user_options = [f"{u['first_name']} {u['last_name']} (ID: {u['user_id']})" for u in users]
-                    selection = st.selectbox("Select a user to edit", user_options, key="last_name_select")
-
-                    if selection:
-                        selected_index = user_options.index(selection)
-                        st.session_state['selected_user'] = users[selected_index]
-                        st.session_state['search'] = True
-                        st.session_state["edit_mode"] = False
+                    st.session_state["user_list"] = users
                 else:
                     st.info("No users found with that last name.")
+                    st.session_state["user_list"] = []
+                    st.session_state["selected_user"] = None
+                    st.session_state["search"] = False
+
             else:
                 st.error(f"Unexpected error: {response.text}")
+                st.session_state["user_list"] = []
+                st.session_state["selected_user"] = None
+                st.session_state["search"] = False
+
+    # Show dropdown if users exist
+    if "user_list" in st.session_state and st.session_state["user_list"]:
+        users = st.session_state["user_list"]
+        user_options = ["-- Select a user --"]
+        for u in users:
+            label = f"{u['first_name']} {u['last_name']} (ID: {u['user_id']})"
+            user_options.append(label)
+
+        selection = st.selectbox("Select a user to edit", user_options, index=0, key="last_name_select")
+
+        if selection != "-- Select a user --":
+            selected_index = user_options.index(selection) - 1
+            selected_user_obj = users[selected_index]
+
+            if st.session_state.get("selected_user") != selected_user_obj:
+                st.session_state["edit_mode"] = False
+
+            st.session_state['selected_user'] = selected_user_obj
+            st.session_state['search'] = True
+            st.success(f"{selection} selected")
 
 # Shiw user info
 if "selected_user" in st.session_state and st.session_state["selected_user"]:
     selected_user = st.session_state["selected_user"]
-    st.dataframe(pd.DataFrame([selected_user])[columns])
+    if "user_list" in st.session_state:
+        st.dataframe(pd.DataFrame(st.session_state["user_list"])[columns])
+    else:
+        st.dataframe(pd.DataFrame([selected_user])[columns])
 
 # Show edit form if a user is selected
 if selected_user or st.session_state['search']:
