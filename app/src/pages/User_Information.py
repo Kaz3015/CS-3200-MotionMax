@@ -198,7 +198,7 @@ with r2c2:
         st.write(f"#### Nothing logged yet!")
     else:
         for index, row in df.iterrows():
-            st.write(f"##### {row['name']}")
+            st.write(f"##### {row['name']} - {row['servings']} servings")
             st.write(f"Calories: {row['calories']} calories")
             st.write(f"Protein: {row['protein']}g")
             st.write(f"Carbohydrates: {row['carbs']}g")
@@ -213,7 +213,7 @@ with r2c2:
         st.write(f"#### Nothing logged yet!")
     else:
         for index, row in df.iterrows():
-            st.write(f"##### {row['name']}")
+            st.write(f"##### {row['name']} - {row['servings']} servings")
             st.write(f"Calories: {row['calories']} calories")
             st.write(f"Protein: {row['protein']}g")
             st.write(f"Carbohydrates: {row['carbs']}g")
@@ -228,7 +228,7 @@ with r2c2:
         st.write(f"#### Nothing logged yet!")
     else:
         for index, row in df.iterrows():
-            st.write(f"##### {row['name']}")
+            st.write(f"##### {row['name']} - {row['servings']} servings")
             st.write(f"Calories: {row['calories']} calories")
             st.write(f"Protein: {row['protein']}g")
             st.write(f"Carbohydrates: {row['carbs']}g")
@@ -244,7 +244,7 @@ with r2c2:
         st.write(f"#### Nothing logged yet!")
     else:
         for index, row in df.iterrows():
-            st.write(f"##### {row['name']}")
+            st.write(f"##### {row['name']} - {row['servings']} servings")
             st.write(f"Calories: {row['calories']} calories")
             st.write(f"Protein: {row['protein']}g")
             st.write(f"Carbohydrates: {row['carbs']}g")
@@ -258,7 +258,7 @@ with r2c2:
         st.subheader("Other")
         
         for index, row in df.iterrows():
-            st.write(f"##### {row['name']}")
+            st.write(f"##### {row['name']} - {row['servings']} servings")
             st.write(f"Calories: {row['calories']} calories")
             st.write(f"Protein: {row['protein']}g")
             st.write(f"Carbohydrates: {row['carbs']}g")
