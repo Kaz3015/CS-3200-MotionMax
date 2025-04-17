@@ -107,8 +107,7 @@ WHERE s.creator_id = {creator_id} AND MONTH(s.created_at) = MONTH(CURRENT_DATE);
 
 
 # ------------------------------------------------------------
-# Route to get the 10 most expensive items from the
-# database.
+# Route to get the messages for a specific trainer
 @trainer.route('/<creator_id>/messageBoard', methods=['GET'])
 def get_trainer_messages(creator_id):
     query = f'''
@@ -131,9 +130,7 @@ ORDER BY m.created_at;
 
 
 # ------------------------------------------------------------
-# This is a POST route to add a new product.
-# Remember, we are using POST routes to create new entries
-# in the database.
+# This is a get route to get users macros
 @trainer.route('/<creator_id>/<subscriber_id>/macros', methods=['Get'])
 def get_client_macros(creator_id, subscriber_id):
     query = f'''
@@ -163,7 +160,7 @@ GROUP BY s.subscriber_id, u.first_name, u.last_name;
 
 
 # ------------------------------------------------------------
-### Get all product categories
+### Gets all the workouts for a specific trainer
 @trainer.route('/<trainer_id>/workouts', methods=['GET'])
 def get_workout(trainer_id):
     query = f'''
@@ -188,7 +185,7 @@ ORDER BY wt.w_id, wet.sequence;
     response.status_code = 200
     return response
 
-
+#Gets the name of the workouts for a specific trainer
 @trainer.route('/<trainer_id>/workoutNames', methods=['GET'])
 def get_workout_names(trainer_id):
     query = f'''
@@ -205,7 +202,7 @@ def get_workout_names(trainer_id):
     response.status_code = 200
     return response
 
-
+#Insert and update for work outs to updated exercises and the workout
 @trainer.route('/<trainer_id>/addWorkout/<workout_id>', methods=['PUT'])
 @trainer.route('/<trainer_id>/addWorkout', methods=['POST'])
 def upsert_workout(trainer_id, workout_id=None):
@@ -353,106 +350,8 @@ def upsert_workout(trainer_id, workout_id=None):
     return jsonify({"status": "success", "w_id": w_id})
 
 
-def update_insert(trainer_id, workout_id, payload):
-    exerciseList = []
-    cursor = db.get_db().cursor()
-    query = f'''
-            SELECT etmd.et_id, et.rep_low, et.rep_high, et.sets
-            FROM Exercise_Template_Meta_Data etmd
-            JOIN Exercise_Meta_Data emd ON etmd.emd_id = emd.emd_id
-            JOIN Exercise_Template et ON etmd.et_id = et.et_id
-            JOIN Workout_Exercise_Template wet ON et.et_id = wet.et_id
-            JOIN Workout_Template wt ON wet.w_id = wt.w_id
-            WHERE wt.user_id = {trainer_id};
-        '''
-    cursor.execute(query)
-    exercise_templates = cursor.fetchall()
-    query = f'''
-                SELECT etmd.emd_id, emd.title, emd.description
-                FROM Exercise_Template_Meta_Data etmd
-                JOIN Exercise_Meta_Data emd ON etmd.emd_id = emd.emd_id
-                JOIN Exercise_Template et ON etmd.et_id = et.et_id
-                JOIN Workout_Exercise_Template wet ON et.et_id = wet.et_id
-                JOIN Workout_Template wt ON wet.w_id = wt.w_id
-                WHERE wt.user_id = {trainer_id};
-            '''
-    cursor.execute(query)
-    exercise_meta_data = cursor.fetchall()
-
-    for exercise in payload['exercises']:
-        inserted = False
-        et_id = None
-        emd_id = None
-        if exercise.get("et_id", "") == "":
-            query = f'''
-            INSERT INTO Exercise_Template (rep_low, rep_high, sets)
-            VALUES ({exercise['rep_low']}, {exercise['rep_high']}, {exercise['sets']});
-            '''
-            cursor.execute(query)
-            db.get_db().commit()
-            et_id = cursor.lastrowid
-        if exercise.get("emd_id", "") == "":
-            query = f'''
-            INSERT INTO Exercise_Meta_Data (title, description)
-            VALUES ('{exercise['title']}', '{exercise['description']}');
-            '''
-            cursor.execute(query)
-            db.get_db().commit()
-            emd_id = cursor.lastrowid
-        for e in exercise_templates:
-            if exercise.get("rep_low") == e['rep_low'] and exercise.get("rep_high") == e['rep_high'] and exercise.get(
-                    "sets") == e['sets']:
-                if exercise.get("et_id", "") != "" and exercise.get("et_id") != e['et_id']:
-                    et_id = e['et_id']
-                    inserted = True
-                    break;
-        if not inserted:
-            query = f'''
-                        INSERT INTO Exercise_Template (rep_low, rep_high, sets)
-                        VALUES ({exercise['rep_low']}, {exercise['rep_high']}, {exercise['sets']});
-                        '''
-            cursor.execute(query)
-            db.get_db().commit()
-            et_id = cursor.lastrowid
-        inserted = False
-        for e in exercise_meta_data:
-            if exercise.get("title") == e['title'] and exercise.get("description") == e['description']:
-                if exercise.get("emd_id", "") != "" and exercise.get("emd_id") != e['emd_id']:
-                    emd_id = e['emd_id']
-                    inserted = True
-                    break;
-        if not inserted:
-            query = f'''
-                        INSERT INTO Exercise_Meta_Data (title, description)
-                        VALUES ('{exercise['title']}', '{exercise['description']}');
-                        '''
-            cursor.execute(query)
-            db.get_db().commit()
-            emd_id = cursor.lastrowid
-        if exercise.get("et_id", "") == "" or exercise.get("emd_id", "") == "":
-            query = f'''
-                INSERT INTO Exercise_Template_Meta_Data (et_id, emd_id)
-                VALUES ({et_id}, {emd_id});
-            '''
-            cursor.execute(query)
-            db.get_db().commit()
-            exerciseList.append((et_id, emd_id))
-
-        else:
-            query = f'''
-                UPDATE Exercise_Template_Meta_Data
-                SET et_id = {et_id}, emd_id = {emd_id}
-                WHERE et_id = {exercise['et_id']} AND emd_id = {exercise['emd_id']};
-            '''
-            cursor.execute(query)
-            db.get_db().commit()
-            exerciseList.append((et_id, emd_id))
-    return exerciseList
-
-
 # ------------------------------------------------------------
-# This is a stubbed route to update a product in the catalog
-# The SQL query would be an UPDATE.
+# Gets all the recipes for a specific trainer
 @trainer.route('/<trainer_id>/recipes', methods=['GET'])
 def get_recipes(trainer_id):
     query = f'''
@@ -475,7 +374,7 @@ ORDER BY r.r_id, i.title;
     response.status_code = 200
     return response
 
-
+#Gets all ingredients for a specific trainer
 @trainer.route('/<trainer_id>/ingredients', methods=['GET'])
 def get_ingredients(trainer_id):
     query = f'''
@@ -496,7 +395,7 @@ def get_ingredients(trainer_id):
     response.status_code = 200
     return response
 
-
+#Adds and updates a recipes from the ingredient table and the recipe table
 @trainer.route('/<trainer_id>/addRecipe', methods=['POST', 'PUT'])
 def add_recipe(trainer_id):
     the_data = request.json
@@ -632,7 +531,8 @@ def add_recipe(trainer_id):
     response.status_code = 200
     return response
 
-
+# ------------------------------------------------------------
+# Gets a specific recipe for a specific trainer
 @trainer.route('/<trainer_id>/<recipe_id>/recipe', methods=['GET'])
 def get_recipe(trainer_id, recipe_id):
     query = f'''
@@ -653,7 +553,8 @@ ORDER BY i.title;
     response.status_code = 200
     return response
 
-
+# ------------------------------------------------------------
+# Deletes a specific recipe for a specific trainer
 @trainer.route('/<trainer_id>/<recipe_id>/deleteRecipe', methods=['DELETE'])
 def delete_recipe(trainer_id, recipe_id):
     query = f'''
@@ -668,7 +569,8 @@ def delete_recipe(trainer_id, recipe_id):
     response.status_code = 200
     return response
 
-
+# ------------------------------------------------------------
+# Deletes a specific workout for a specific trainer
 @trainer.route('/<trainer_id>/<workout_id>/deleteWorkout', methods=['DELETE'])
 def delete_workout(trainer_id, workout_id):
     query = f'''
@@ -683,7 +585,8 @@ def delete_workout(trainer_id, workout_id):
     response.status_code = 200
     return response
 
-
+# ------------------------------------------------------------
+# Gets the financials for a specific trainer
 @trainer.route('/<trainer_id>/financials', methods=['GET'])
 # ------------------------------------------------------------
 # Get the financials for a trainer
@@ -707,7 +610,8 @@ ORDER BY year, month;
     response.status_code = 200
     return response
 
-
+# ------------------------------------------------------------
+# Sends the messages from subscribers or trainer to the trainer
 @trainer.route('/<trainer_id>/messageBoard/<subscriber_id>', methods=['POST'])
 # ------------------------------------------------------------
 # Send a message to a subscriber or trainer

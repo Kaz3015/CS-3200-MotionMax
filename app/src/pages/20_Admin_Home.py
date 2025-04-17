@@ -13,10 +13,6 @@ st.title('System admin Home Page')
 st.session_state['search'] = False
 st.session_state['selected_user'] = None
 
-if st.button('Update ML Models',
-             type='primary',
-             use_container_width=True):
-  st.switch_page('pages/21_ML_Model_Mgmt.py')
 
 if st.button('Submit Support Ticket',
              type='primary',
