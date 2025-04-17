@@ -194,3 +194,43 @@ def delete_user(user_id):
         return jsonify({"message": f"User {user_id} deleted successfully."}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+# ------------------------------------------------------------
+
+@admin.route('/support/<int:ticket_id>', methods=['PUT'])
+def resolve_support_ticket(ticket_id):
+    try:
+        data = request.json
+        admin_id = data.get("admin_id")
+
+        if not admin_id:
+            return jsonify({"error": "Missing admin_id"}), 400
+
+        cursor = db.get_db().cursor()
+
+        cursor.execute(
+            "SELECT status "
+            "FROM Support_Tickets "
+            "WHERE support_ticket_id = %s", (ticket_id,)
+        )
+        ticket = cursor.fetchone()
+
+        if not ticket:
+            return jsonify({"error": "Ticket not found"}), 404
+        if ticket["status"].lower() == "closed":
+            return jsonify({"message": "Ticket is already closed"}), 409
+
+        query = f"""
+            UPDATE Support_Tickets
+            SET status='closed',
+                date_resolved=NOW(),
+                resolved_by_admin={admin_id}
+            WHERE support_ticket_id={ticket_id}
+        """
+        cursor.execute(query)
+        db.get_db().commit()
+
+        return jsonify({"message": "Ticket resolved successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
