@@ -1,22 +1,33 @@
 import streamlit as st
 import requests
 import pandas as pd
+import logging
 
 st.title("MotionMAX App Feedback Results")
 st.write("View all user feedback submissions for the MotionMAX application.")
+#get the API endpoint for submitting the survey feedback
+url = "http://api:4000/s/feedback_survey_output"
+#send a get request to the API
+response = requests.get(url)
+#if the request is successful return the JSON data
+if response.status_code == 200:
+    logger = logging.getLogger(__name__)
+    #turn the response to a list of feedback entries
+    feedback_data = response.json()
+    logger.info(feedback_data)
 
-#empty to store the feedback data entry
-feedback_data = []
 
 #display the feedback entries
 if feedback_data:
     #show each feedback entry
     for i, feedback in enumerate(feedback_data):
         st.subheader(f"Feedback #{i+1}")
+        if i > 5:
+            break
 
         #make a display layout for each feedback entry
         with st.container():
-            col1, col2 = st.columns([1, 3])
+            col1, col2 = st.columns([1, 2])
 
             with col1:
                 st.write("**User ID:**")
@@ -32,15 +43,8 @@ if feedback_data:
                 st.write(feedback.get('app_enjoyment', 'N/A'))
                 st.write(feedback.get('improvement_suggestions', 'N/A'))
                 st.write(feedback.get('similar_apps', 'N/A'))
-                st.write(feedback.get('most_useful_feature', 'N/A'))
+                st.write(feedback['most_useful_feature'])
 
 
 
-#get the API endpoint for submitting the survey feedback
-url = "http://api:4000/s/feedback_survey_output"
-#send a get request to the API
-response = requests.get(url)
-#if the request is successful return the JSON data
-if response.status_code == 200:
-    #turn the response to a list of feedback entries
-    feedback_data = response.json()
+
