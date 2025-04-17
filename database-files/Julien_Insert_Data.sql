@@ -781,97 +781,53 @@ INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES
   (59, 36,  1.0),
   (60, 37,  1.0), (60, 14,  1.0);
 
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (1,  42, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (2,  43, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (3,  44, 3);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (4,  45, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (5,  46, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (6,  47, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (7,  48, 4);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (8,  49, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (9,  50, 3);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (10, 51, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (11, 52, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (12, 53, 3);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (13, 54, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (14, 55, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (15, 56, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (16, 57, 3);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (17, 58, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (18, 59, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (19, 60, 4);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (20, 61, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (21, 62, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (22, 63, 3);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (23, 64, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (24, 65, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (25, 66, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (26, 67, 3);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (27, 68, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (28, 69, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (29, 70, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (30, 71, 4);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (31, 72, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (32, 73, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (33, 74, 3);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (34, 75, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (35, 76, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (36, 77, 4);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (37, 78, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (38, 79, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (39, 80, 3);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (40, 81, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (41, 82, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (42, 83, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (43, 84, 3);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (44, 85, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (45, 86, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (46, 87, 4);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (47, 88, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (48, 89, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (49, 90, 3);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (50, 91, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (51, 92, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (52, 93, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (53, 94, 3);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (54, 95, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (55, 96, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (56, 97, 4);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (57, 98, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (58, 99, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (59, 100, 3);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (60, 101, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (61, 102, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (62, 103, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (63, 104, 3);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (64, 105, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (65, 106, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (66, 107, 4);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (67, 108, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (68, 109, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (69, 110, 3);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (70, 111, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (71, 112, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (72, 113, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (73, 114, 3);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (74, 115, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (75, 116, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (76, 117, 4);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (77, 118, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (78, 119, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (79, 120, 3);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (80, 121, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (81, 122, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (82, 123, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (83, 124, 3);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (84, 125, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (85, 126, 4);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (86, 127, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (87, 128, 1);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (88, 129, 3);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (89, 130, 2);
-INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES (90, 131, 1);
-
+-- 90 new FoodLog_FoodItem entries
+INSERT INTO FoodLog_FoodItem (food_log_id, food_item_id, servings) VALUES
+  (1,  1, 1.0),  (1,  2, 0.5),
+  (2,  3, 1.0),  (2,  4, 0.5),
+  (3,  5, 1.0),  (3,  6, 0.5),
+  (4,  7, 1.0),  (4,  8, 0.5),
+  (5,  9, 1.0),  (5, 10, 0.5),
+  (6, 11, 1.0),  (6, 12, 0.5),
+  (7, 13, 1.0),  (7, 14, 0.5),
+  (8, 15, 1.0),  (8, 16, 0.5),
+  (9, 17, 1.0),  (9, 18, 0.5),
+  (10,19, 1.0),  (10,20, 0.5),
+  (11,21, 1.0),  (11,22, 0.5),
+  (12,23, 1.0),  (12,24, 0.5),
+  (13,25, 1.0),  (13,26, 0.5),
+  (14,27, 1.0),  (14,28, 0.5),
+  (15,29, 1.0),  (15,30, 0.5),
+  (16,31, 1.0),  (16,32, 0.5),
+  (17,33, 1.0),  (17,34, 0.5),
+  (18,35, 1.0),  (18,36, 0.5),
+  (19,37, 1.0),  (19,38, 0.5),
+  (20,39, 1.0),  (20,40, 0.5),
+  (21,41, 1.0),  (21,42, 0.5),
+  (22,43, 1.0),  (22,44, 0.5),
+  (23,45, 1.0),  (23,46, 0.5),
+  (24,47, 1.0),  (24,48, 0.5),
+  (25,49, 1.0),  (25,50, 0.5),
+  (26,51, 1.0),  (26,52, 0.5),
+  (27,53, 1.0),  (27,54, 0.5),
+  (28,55, 1.0),  (28,56, 0.5),
+  (29,57, 1.0),  (29,58, 0.5),
+  (30, 1, 1.0),  (30, 2, 0.5),
+  (31, 3, 1.0),  (31, 4, 0.5),
+  (32, 5, 1.0),  (32, 6, 0.5),
+  (33, 7, 1.0),  (33, 8, 0.5),
+  (34, 9, 1.0),  (34,10, 0.5),
+  (35,11, 1.0),  (35,12, 0.5),
+  (36,13, 1.0),  (36,14, 0.5),
+  (37,15, 1.0),  (37,16, 0.5),
+  (38,17, 1.0),  (38,18, 0.5),
+  (39,19, 1.0),  (39,20, 0.5),
+  (40,21, 1.0),  (40,22, 0.5),
+  (41,23, 1.0),  (41,24, 0.5),
+  (42,25, 1.0),  (42,26, 0.5),
+  (43,27, 1.0),  (43,28, 0.5),
+  (44,29, 1.0),  (44,30, 0.5),
+  (45,31, 1.0),  (45,32, 0.5);
 
 INSERT INTO HealthTips (name, text, tip_type) VALUES
 ('Health Tip 1', 'Aim for at least 150 minutes of moderate-intensity exercise per week.', 'exercise'),
