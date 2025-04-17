@@ -4,13 +4,16 @@ import datetime
 import calendar
 import pandas as pd
 import requests
+from modules.nav import SideBarLinks
+
+SideBarLinks(show_home=True)
 
 row = st.columns([5, 5])
 
 with row[0]:
     st.markdown("""
               <style>
-              .st-key-finacials{
+              .st-key-financials{
                       background-color: white;
                       border-radius: 12px;
                       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -19,16 +22,16 @@ with row[0]:
                       padding: 20px;
                       overflow: hidden;
               }
-              .st-key-finacials:hover {
+              .st-key-financials:hover {
                   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
                   transform: translateY(-2px);
                   transition: box-shadow 0.3s ease;
               }
               </style>
               """, unsafe_allow_html=True)
-    with st.container(key = "finacials", border = True):
+    with st.container(key = "financials", border = True):
         # Get financial data from API
-        data = requests.get(f'http://api:4000/t/{st.session_state["user_id"]}/finacials').json()
+        data = requests.get(f'http://api:4000/t/{st.session_state["user_id"]}/financials').json()
 
         # Filter for current year
         current_year = datetime.datetime.now().year

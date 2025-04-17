@@ -1,7 +1,7 @@
 USE motionmax;
 
 INSERT INTO User (user_id, first_name, last_name, email, gender, role, height_ft, height_in, weight, date_of_birth, created_at, updated_at) 
-  VALUES (1, 'Lisa', 'Smith', 'lisa.smith@example.com', 'female', 'trainer', 6, 0, 165.61, '1986-04-13', '2025-11-16 16:13:41', '2025-11-16 16:13:41');
+  VALUES (1, 'John', 'Smith', 'lisa.smith@example.com', 'male', 'trainer', 6, 0, 165.61, '1986-04-13', '2025-11-16 16:13:41', '2025-11-16 16:13:41');
 INSERT INTO User (user_id, first_name, last_name, email, gender, role, height_ft, height_in, weight, date_of_birth, created_at, updated_at) 
   VALUES (2, 'Jesus', 'Hall', 'jesus.hall@example.com', 'male', 'trainer', 5, 1, 152.99, '1997-10-16', '2025-09-26 04:08:07', '2025-09-26 04:08:07');
 INSERT INTO User (user_id, first_name, last_name, email, gender, role, height_ft, height_in, weight, date_of_birth, created_at, updated_at) 

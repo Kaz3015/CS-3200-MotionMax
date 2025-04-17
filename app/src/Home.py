@@ -62,7 +62,7 @@ if not maintenance_mode:
         # when user clicks the button, they are now considered authenticated
         st.session_state['authenticated'] = True
         # we set the role of the current user
-        st.session_state['role'] = 'Fitness Trainer'
+        st.session_state['role'] = 'trainer'
         # we add the first name of the user (so it can be displayed on
         # subsequent pages).
         st.session_state['first_name'] = 'John'
@@ -80,7 +80,7 @@ if not maintenance_mode:
         st.session_state['workout_loaded'] = False
         st.session_state['added_ingredients'] = []
         st.session_state['recipe_id'] = None
-        logger.info("Logging in as Fitness Trainer Persona")
+        logger.info(f"Logging in as Fitness Trainer Persona with role as {st.session_state['role']} and authenticated as {st.session_state['authenticated']}")
         logger.info(f"User ID: {st.session_state['user_id']}")
         logger.info(f"Subscriber ID: {st.session_state['subscriber_id']}")
         st.switch_page('pages/Trainer_info_page.py')

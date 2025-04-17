@@ -86,7 +86,7 @@ ORDER BY u.last_name DESC;
 
 
 # ------------------------------------------------------------
-# Get the top 5 most expensive products from the database
+# Gets all the specified trainers clients
 @trainer.route('/<creator_id>/getClients')
 def get_clients(creator_id):
     query = f'''
@@ -617,7 +617,7 @@ def delete_workout(trainer_id, workout_id):
     return response
 
 
-@trainer.route('/<trainer_id>/finacials', methods=['GET'])
+@trainer.route('/<trainer_id>/financials', methods=['GET'])
 # ------------------------------------------------------------
 # Get the financials for a trainer
 def get_financials(trainer_id):

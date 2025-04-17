@@ -83,10 +83,10 @@ def SideBarLinks(show_home=False):
                 "pages/Trainer_info_page.py", label="Trainer informatics", icon="👤"
             )
             st.sidebar.page_link(
-                "pages/Trainer_form", label="User informatics", icon="📝"
+                "pages/Trainer_form.py", label="User informatics", icon="📝"
             )
             st.sidebar.page_link(
-                "pages/Client_info_page", label="Client informatics", icon="🏋️"
+                "pages/Client_info_page.py", label="Client informatics", icon="🏋️"
             )
 
         # If the user role is usaid worker, show the Api Testing page
