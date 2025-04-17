@@ -302,7 +302,7 @@ INSERT INTO Workout_Exercise_Template (w_id, et_id, sequence) VALUES (32, 20, 10
 INSERT INTO Workout_Exercise_Template (w_id, et_id, sequence) VALUES (31, 25, 4);
 INSERT INTO Workout_Exercise_Template (w_id, et_id, sequence) VALUES (43, 58, 10);
 INSERT INTO Workout_Exercise_Template (w_id, et_id, sequence) VALUES (53, 65, 6);
-INSERT INTO Workout_Exercise_Template (w_id, et_id, sequence) VALUES (47, 23, 6);
+INSERT INTO Workout_Exercise_Template (w_id, et_id, sequence) VALUES (47, 65, 6);
 INSERT INTO Workout_Exercise_Template (w_id, et_id, sequence) VALUES (34, 49, 5);
 INSERT INTO Workout_Exercise_Template (w_id, et_id, sequence) VALUES (1, 19, 9);
 INSERT INTO Workout_Exercise_Template (w_id, et_id, sequence) VALUES (39, 27, 4);
@@ -347,7 +347,7 @@ INSERT INTO Workout_Exercise_Template (w_id, et_id, sequence) VALUES (57, 47, 8)
 INSERT INTO Workout_Exercise_Template (w_id, et_id, sequence) VALUES (54, 20, 3);
 INSERT INTO Workout_Exercise_Template (w_id, et_id, sequence) VALUES (66, 54, 8);
 INSERT INTO Workout_Exercise_Template (w_id, et_id, sequence) VALUES (50, 43, 8);
-INSERT INTO Workout_Exercise_Template (w_id, et_id, sequence) VALUES (1, 55, 4);
+INSERT INTO Workout_Exercise_Template (w_id, et_id, sequence) VALUES (1, 43, 4);
 INSERT INTO Workout_Exercise_Template (w_id, et_id, sequence) VALUES (40, 65, 5);
 INSERT INTO Workout_Exercise_Template (w_id, et_id, sequence) VALUES (49, 18, 4);
 INSERT INTO Workout_Exercise_Template (w_id, et_id, sequence) VALUES (61, 40, 10);
@@ -626,7 +626,7 @@ INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (2, 36, 
 INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (39, 37, 0.9, 'pint');
 INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (19, 29, 1.41, 'tsp');
 INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (12, 16, 2.24, 'tbsp');
-INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (2, 19, 1.12, 'oz');
+INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (2, 16, 1.12, 'oz');
 INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (29, 35, 1.38, 'tsp');
 INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (4, 21, 2.82, 'cup');
 INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (30, 4, 1.8, 'pc');
@@ -641,13 +641,13 @@ INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (11, 20,
 INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (36, 10, 1.51, 'cup');
 INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (8, 2, 2.95, 'cup');
 INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (35, 1, 1.9, 'lb');
-INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (25, 35, 0.31, 'gallon');
-INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (35, 24, 2.8, 'gallon');
+INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (25, 1, 0.31, 'gallon');
+INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (35, 17, 2.8, 'gallon');
 INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (12, 17, 1.9, 'lb');
 INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (27, 19, 0.84, 'pint');
 INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (2, 10, 1.42, 'cup');
 INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (18, 6, 0.89, 'lb');
-INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (1, 38, 0.54, 'tbsp');
+INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (1, 7, 0.54, 'tbsp');
 INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (13, 14, 2.24, 'pc');
 INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (5, 37, 2.83, 'oz');
 INSERT INTO RecipeIngredient (r_id, ing_id, amount, measurement) VALUES (20, 37, 2.63, 'gallon');
