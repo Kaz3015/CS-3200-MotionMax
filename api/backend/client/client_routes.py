@@ -591,3 +591,22 @@ def get_food_log(user_id, meal_type):
     cursor.close()
     return jsonify(rows), 200
 
+@client.route('/insert/insert_food_log/<user_id>/<meal_type>/', methods=["POST"])
+def insert_food_log(user_id, meal_type):
+    query = """
+        INSERT INTO FoodLog (user_id, meal_type, date_logged)
+        VALUES (%s, %s, CURRENT_DATE)
+    """
+    conn = db.get_db()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(query, (user_id, meal_type))
+        conn.commit()
+        food_log_id = cursor.lastrowid
+        return jsonify({"food_log_id": food_log_id}), 200
+    except Exception as e:
+        conn.rollback()
+        return jsonify({"error": str(e)}), 400
+    finally:
+        cursor.close()
+
