@@ -610,3 +610,24 @@ def insert_food_log(user_id, meal_type):
     finally:
         cursor.close()
 
+@client.route('/insert/insert_food_item/<meal_name>/<calories>/<protein>/<carbs>/<fats>/', methods=["POST"])
+def insert_food_item(meal_name, calories, protein, carbs, fats):
+    query = f"""
+        INSERT INTO FoodItem(name, calories, protein, carbs, fats)
+        VALUES('{meal_name}', {calories}, {protein}, {carbs}, {fats})
+    """
+    conn = db.get_db()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(query)
+        conn.commit()
+        # return the new ID back as JSON
+        return jsonify({"food_item_id": cursor.lastrowid}), 200
+    except Exception as e:
+        conn.rollback()
+        return jsonify({"error": str(e)}), 400
+    finally:
+        cursor.close()
+
+
+
