@@ -185,6 +185,7 @@ ORDER BY wt.w_id, wet.sequence;
     response.status_code = 200
     return response
 
+log = logging.getLogger(__name__)
 #Gets the name of the workouts for a specific trainer
 @trainer.route('/<trainer_id>/workoutNames', methods=['GET'])
 def get_workout_names(trainer_id):
@@ -203,151 +204,60 @@ def get_workout_names(trainer_id):
     return response
 
 #Insert and update for work outs to updated exercises and the workout
-@trainer.route('/<trainer_id>/addWorkout/<workout_id>', methods=['PUT'])
-@trainer.route('/<trainer_id>/addWorkout', methods=['POST'])
-def upsert_workout(trainer_id, workout_id=None):
-    data = request.json
-    cursor = db.get_db().cursor()
+@trainer.route("/<int:trainer_id>/addWorkout", methods=["POST"])
+def create_workout(trainer_id: int):
+    """Create a brand‑new workout with its exercises; no update logic."""
+    data  = request.get_json(force=True)
+    conn  = db.get_db()
+    cur   = conn.cursor()
 
-    # 1) UPSERT the Workout_Template
-    if data.get('w_id'):
-        # update existing
-        w_id = data['w_id']
-        cursor.execute("""
-            UPDATE Workout_Template
-               SET title = %s,
-                   description = %s
-             WHERE w_id = %s
-        """, (
-            data['title'],
-            data.get('description'),
-            w_id
-        ))
-    else:
-        # insert new
-        cursor.execute("""
-            INSERT INTO Workout_Template (user_id, title, description)
-                 VALUES (%s, %s, %s)
-        """, (
-            data['user_id'],
-            data['title'],
-            data.get('description'),
-        ))
-        w_id = cursor.lastrowid
+    try:
+        # 1. Workout_Template
+        cur.execute(
+            "INSERT INTO Workout_Template (user_id, title, description) "
+            "VALUES (%s, %s, %s)",
+            (data["user_id"], data["title"], data.get("description")),
+        )
+        w_id = cur.lastrowid
+        log.info("New workout w_id=%s created", w_id)
 
-    # 2) Figure out which et_id’s already exist in DB for this workout
-    cursor.execute("""
-        SELECT et_id
-          FROM Workout_Exercise_Template
-         WHERE w_id = %s
-    """, (w_id,))
-    existing_et_ids = {row['et_id'] for row in cursor.fetchall()}
+        # 2. Loop over exercises
+        for ex in data["exercises"]:
+            cur.execute(
+                "INSERT INTO Exercise_Template (rep_low, rep_high, sets) "
+                "VALUES (%s, %s, %s)",
+                (ex["rep_low"], ex["rep_high"], ex["sets"]),
+            )
+            et_id = cur.lastrowid
 
-    incoming_et_ids = set()
+            cur.execute(
+                "INSERT INTO Workout_Exercise_Template (w_id, et_id, sequence) "
+                "VALUES (%s, %s, %s)",
+                (w_id, et_id, ex["sequence"]),
+            )
 
-    # 3) Loop through payload exercises to insert or update
-    for ex in data['exercises']:
-        seq     = ex['sequence']
-        rep_low = ex['rep_low']
-        rep_high= ex['rep_high']
-        sets    = ex['sets']
-        title   = ex['title']
-        desc    = ex.get('description','')
+            cur.execute(
+                "INSERT INTO Exercise_Meta_Data (title, description) "
+                "VALUES (%s, %s)",
+                (ex["title"], ex.get("description", "")),
+            )
+            emd_id = cur.lastrowid
 
-        if ex.get('et_id'):
-            # ---- UPDATE path ----
-            et_id  = ex['et_id']
-            emd_id = ex['emd_id']
-            incoming_et_ids.add(et_id)
+            cur.execute(
+                "INSERT INTO Exercise_Template_Meta_Data (et_id, emd_id) "
+                "VALUES (%s, %s)",
+                (et_id, emd_id),
+            )
 
-            # update the template parameters
-            cursor.execute("""
-                UPDATE Exercise_Template
-                   SET rep_low  = %s,
-                       rep_high = %s,
-                       sets     = %s
-                 WHERE et_id = %s
-            """, (rep_low, rep_high, sets, et_id))
+        conn.commit()
+        return jsonify({"status": "success", "w_id": w_id}), 201
 
-            # update the meta‐data
-            cursor.execute("""
-                UPDATE Exercise_Meta_Data
-                   SET title       = %s,
-                       description = %s
-                 WHERE emd_id = %s
-            """, (title, desc, emd_id))
-
-            # update the sequence in the join table
-            cursor.execute("""
-                UPDATE Workout_Exercise_Template
-                   SET sequence = %s
-                 WHERE w_id     = %s
-                   AND et_id    = %s
-            """, (seq, w_id, et_id))
-
-        else:
-            # ---- INSERT path ----
-            #  a) create core exercise template
-            cursor.execute("""
-                INSERT INTO Exercise_Template (rep_low, rep_high, sets)
-                     VALUES (%s, %s, %s)
-            """, (rep_low, rep_high, sets))
-            new_et_id = cursor.lastrowid
-            incoming_et_ids.add(new_et_id)
-
-            #  b) link it to this workout + sequence
-            cursor.execute("""
-                INSERT INTO Workout_Exercise_Template (w_id, et_id, sequence)
-                     VALUES (%s, %s, %s)
-            """, (w_id, new_et_id, seq))
-
-            #  c) create its meta‐data
-            cursor.execute("""
-                INSERT INTO Exercise_Meta_Data (title, description)
-                     VALUES (%s, %s)
-            """, (title, desc))
-            new_emd_id = cursor.lastrowid
-
-            #  d) link template ↔ meta‐data
-            cursor.execute("""
-                INSERT INTO Exercise_Template_Meta_Data (et_id, emd_id)
-                     VALUES (%s, %s)
-            """, (new_et_id, new_emd_id))
-
-    # 4) DELETE any exercises that were removed in the payload
-    to_delete = existing_et_ids - incoming_et_ids
-    for et_id in to_delete:
-        # un‐link from this workout
-        cursor.execute("""
-            DELETE FROM Workout_Exercise_Template
-             WHERE w_id  = %s
-               AND et_id = %s
-        """, (w_id, et_id))
-
-        # Optionally, delete the template & its meta‐data if you want no orphans:
-        cursor.execute("""
-            DELETE etm
-              FROM Exercise_Template_Meta_Data AS etm
-             WHERE etm.et_id = %s
-        """, (et_id,))
-
-        # find & delete its meta‐row
-        cursor.execute("""
-            DELETE FROM Exercise_Meta_Data
-             WHERE emd_id NOT IN (
-               SELECT emd_id
-                 FROM Exercise_Template_Meta_Data
-             )
-        """)
-
-        # finally delete the core template
-        cursor.execute("""
-            DELETE FROM Exercise_Template
-             WHERE et_id = %s
-        """, (et_id,))
-
-    db.get_db().commit()
-    return jsonify({"status": "success", "w_id": w_id})
+    except Exception as err:
+        conn.rollback()
+        log.exception("Unexpected error while creating workout")
+        return jsonify({"status": "error", "message": str(err)}), 500
+    finally:
+        cur.close()
 
 
 # ------------------------------------------------------------

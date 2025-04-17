@@ -7,6 +7,8 @@ def split_pill_selector(key, option_left, option_right):
     def on_click_left():
         st.session_state[f"{key}_selected"] = True
         st.session_state['form'] = option_left.lower()
+        st.session_state['workout_id'] = None
+        st.session_state["exercises"] = []
         logger.info(f"Left option clicked: {st.session_state['form']}")
     def on_click_right():
         st.session_state[f"{key}_selected"] = False
