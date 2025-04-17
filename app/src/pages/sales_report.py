@@ -9,9 +9,11 @@ import altair as alt
 from modules.nav import SideBarLinks
 SideBarLinks(show_home=True)
 
-# Function to get subscriber data from API
+
 def get_subscriber_data():
+    # get the API endpoint for submitting the subscriber count
     url = "http://api:4000/s/subscriber_count"
+    # send a get request to the API
     response = requests.get(url).json()
 
     return response
@@ -28,8 +30,9 @@ with row1[0]:
         # Convert the API response to a pandas DataFrame
         df = pd.DataFrame(subscriber_data)
         if not df.empty:
+            #sum the month and subscriber count
             monthly_data = df.groupby('month', as_index=False)['subscriber_count'].sum()
-
+            #turn the month and the subsciber count as an int
             monthly_data['month'] = monthly_data['month'].astype(int)
             monthly_data['subscriber_count'] = monthly_data['subscriber_count'].astype(int)
 
@@ -51,13 +54,14 @@ with row1[0]:
 
             st.altair_chart(chart, use_container_width=True)
 
-            # Show current total subscribers
+            #show current total subscribers
             total_subscribers = df['subscriber_count'].sum()
             st.metric("Total Subscribers", f"{total_subscribers:,}")
 
 get_subscriber_data()
 
 with row1[1]:
+    # get the API endpoint for submitting the revenue
     url = "http://api:4000/s/revenue"
 # send a get request to the API
 response = requests.get(url)
@@ -69,20 +73,22 @@ st.title("MotionMAX Revenue")
 
 df = pd.DataFrame(data)
 df
-# Make sure month is numeric
+# make sure month is numeric
 df['month'] = pd.to_numeric(df['month'])
 
-# Define month mapping
+# define month mapping
 month_map = {
     1: "Jan", 2: "Feb", 3: "Mar", 4: "Apr",
     5: "May", 6: "Jun", 7: "Jul", 8: "Aug",
     9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec"
 }
 
-# Add month names
+# add month names
 df = df.sort_values(by='month', ascending=True)
 df['month'] = df['month'].map(month_map)
+#list the month map value in order
 order = list(month_map.values())
+#categorize the data
 df['month'] = pd.Categorical(df['month'], categories=order, ordered=True)
 
 # Convert revenue to numeric

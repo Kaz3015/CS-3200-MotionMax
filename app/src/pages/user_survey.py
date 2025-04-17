@@ -40,4 +40,3 @@ with st.form("MotionMAX Survey"):
                 url,
                 json=data,
             )
-

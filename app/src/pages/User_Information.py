@@ -11,6 +11,10 @@ import pandas as pd
 #page configurations
 st.set_page_config(layout="wide")
 
+#Home button
+if st.button("Home"):
+    st.switch_page("Home.py")
+
 # Column involving the list of user-made workouts
 r1c1, r1c2, r1c3 = st.columns([1, 3, 1], border=True)
 

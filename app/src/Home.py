@@ -71,6 +71,7 @@ if not maintenance_mode:
         # finally, we ask streamlit to switch to another page, in this case, the
         # landing page for this particular user type
         st.session_state['user_id'] = requests.get('http://api:4000/t').json()['user_id']
+        st.session_state['trainer_id'] = st.session_state['user_id']
         st.session_state['subscriber_id'] = requests.get('http://api:4000/t').json()['subscriber_id']
         st.session_state['doubleClicked'] = False
         st.session_state['form'] = "workout form"

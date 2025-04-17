@@ -7,6 +7,10 @@ import requests
 
 st.set_page_config(layout = 'wide')
 
+#Home button
+if st.button("Home"):
+    st.switch_page("Home.py")
+
 SideBarLinks()
 
 st.title('System admin Home Page')
