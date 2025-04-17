@@ -164,7 +164,7 @@ def get_motivation_tip():
 @client.route('/food/food_intake_information/<meal_type>/<user_id>/', methods=['GET'])
 def food_intake_information(meal_type, user_id):
     query = f'''
-        SELECT log.meal_type, item.name, item.calories, item.protein, item.carbs, item.fats
+        SELECT log.meal_type, item.name, item.calories, item.protein, item.carbs, item.fats, logItem.servings
         FROM FoodLog log
             JOIN FoodLog_FoodItem logItem ON log.food_log_id = logItem.food_log_id
             JOIN FoodItem item ON logItem.food_item_id = item.food_item_id
@@ -489,7 +489,7 @@ def insert_food_item_to_food_log(food_log_id, food_item_id, servings):
         cursor.close()
     return response 
 
-#Route t olog the completion of a circuit workout session
+#Route to log the completion of a circuit workout session
 @client.route('/insert/workout_log/<user_id>/<circuit_id>/', methods=["POST"])
 def insert_workout_log(user_id, circuit_id):
     query = """
