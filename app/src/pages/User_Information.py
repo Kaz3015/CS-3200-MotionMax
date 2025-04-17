@@ -33,68 +33,71 @@ with r1c2:
     st.header("Breakdown of Today's Workout")
     df = pd.DataFrame(requests.get(f'http://api:4000/c/workouts/currently-scheduled-exercises/{st.session_state["user_id"]}').json())
     
-    #Inner columns for the breakdown of today's workout
-    i_c1, i_c2 = st.columns([1, 2], border=True)
-    
-    with i_c1:
-        st.header("Muscle Group Info")
-        st.write(df.iloc[0]['target_muscle'])
+    if df.empty:
+        st.write("No workout scheduled for today! Great job!")
+    else:
+        #Inner columns for the breakdown of today's workout
+        i_c1, i_c2 = st.columns([1, 2], border=True)
         
-        st.header("Full Workout Info")
-        
-        for i, row in df.iterrows():
-            color = None
+        with i_c1:
+            st.header("Muscle Group Info")
+            st.write(df.iloc[0]['target_muscle'])
             
-            if row['completed']:
-                color = 'green'
+            st.header("Full Workout Info")
+            
+            for i, row in df.iterrows():
+                color = None
+                
+                if row['completed']:
+                    color = 'green'
+                else:
+                    color = 'red'
+                
+                if row['reps'] != 0 and row['reps'] != None and row['set_order'] == 1:
+                    st.write('')
+                    st.write('')
+                    st.write(f"Name: {row['name']}")
+                    st.write(f":{color}[Set #{row['set_order']}:] {row['reps']} reps with {row['rest_seconds']}s of rest with {row['weight']}lb")
+                elif row['reps'] != 0 and row['reps'] != None and row['set_order'] != 1:
+                    st.write(f":{color}[Set #{row['set_order']}:] {row['reps']} reps with {row['rest_seconds']}s of rest with {row['weight']}lb")
+                elif row['duration_seconds'] != 0 and row['duration_seconds'] != None and row['set_order'] == 1:
+                    st.write('')
+                    st.write('')
+                    st.write(f"Name: {row['name']}")
+                    st.write(f":{color}[Set #{row['set_order']}:] {row['duration_seconds']}s with {row['rest_seconds']}s of rest with {row['weight']}lb")
+                elif row['duration_seconds'] != 0 and row['duratiion_seconds'] != None and row['set_order'] != 1:
+                    st.write(f":{color}[Set #{row['set_order']}:] {row['duration_seconds']}s with {row['rest_seconds']}s of rest with {row['weight']}lb")
+                elif row['is_superset'] == True and row['is_superset'] != None and row['set_order'] == 1:
+                    st.write('')
+                    st.write('')
+                    st.write(f"Name: {row['name']}")
+                    st.write(f":{color}[Set #{row['set_order']}:] superset with {row['rest_seconds']}s of rest with {row['weight']}lb")
+                elif row['is_superset'] == True and row['is_superset'] != None and row['set_order'] != 1:
+                    st.write(f":{color}[Set #{row['set_order']}:] superset with {row['rest_seconds']}s of rest with {row['weight']}lb")
+        
+        with i_c2:
+            st.header("Next Up Exercise Information")
+            df = pd.DataFrame(requests.get(f'http://api:4000/c/workouts/currently-scheduled/next-exercise/{st.session_state["user_id"]}').json())
+            
+            st.write(f"Next Up: {df.iloc[0]['name']}")
+            st.write(f"Target Muscle: {df.iloc[0]['target_muscle']}")
+            
+            if row['reps'] != 0:
+                st.write(f"Current Set: {row['reps']} reps with {row['rest_seconds']}s of rest with {row['weight']}lb")
+            elif row['duration_seconds'] != 0:
+                st.write(f"Current Set: {row['duration_seconds']}s with {row['rest_seconds']}s of rest with {row['weight']}lb")
             else:
-                color = 'red'
+                st.write(f"Current Set: superset with {row['rest_seconds']}s of rest with {row['weight']}lb")
             
-            if row['reps'] != 0 and row['reps'] != None and row['set_order'] == 1:
-                st.write('')
-                st.write('')
-                st.write(f"Name: {row['name']}")
-                st.write(f":{color}[Set #{row['set_order']}:] {row['reps']} reps with {row['rest_seconds']}s of rest with {row['weight']}lb")
-            elif row['reps'] != 0 and row['reps'] != None and row['set_order'] != 1:
-                st.write(f":{color}[Set #{row['set_order']}:] {row['reps']} reps with {row['rest_seconds']}s of rest with {row['weight']}lb")
-            elif row['duration_seconds'] != 0 and row['duration_seconds'] != None and row['set_order'] == 1:
-                st.write('')
-                st.write('')
-                st.write(f"Name: {row['name']}")
-                st.write(f":{color}[Set #{row['set_order']}:] {row['duration_seconds']}s with {row['rest_seconds']}s of rest with {row['weight']}lb")
-            elif row['duration_seconds'] != 0 and row['duratiion_seconds'] != None and row['set_order'] != 1:
-                st.write(f":{color}[Set #{row['set_order']}:] {row['duration_seconds']}s with {row['rest_seconds']}s of rest with {row['weight']}lb")
-            elif row['is_superset'] == True and row['is_superset'] != None and row['set_order'] == 1:
-                st.write('')
-                st.write('')
-                st.write(f"Name: {row['name']}")
-                st.write(f":{color}[Set #{row['set_order']}:] superset with {row['rest_seconds']}s of rest with {row['weight']}lb")
-            elif row['is_superset'] == True and row['is_superset'] != None and row['set_order'] != 1:
-                st.write(f":{color}[Set #{row['set_order']}:] superset with {row['rest_seconds']}s of rest with {row['weight']}lb")
-    
-    with i_c2:
-        st.header("Next Up Exercise Information")
-        df = pd.DataFrame(requests.get(f'http://api:4000/c/workouts/currently-scheduled/next-exercise/{st.session_state["user_id"]}').json())
-        
-        st.write(f"Next Up: {df.iloc[0]['name']}")
-        st.write(f"Target Muscle: {df.iloc[0]['target_muscle']}")
-        
-        if row['reps'] != 0:
-            st.write(f"Current Set: {row['reps']} reps with {row['rest_seconds']}s of rest with {row['weight']}lb")
-        elif row['duration_seconds'] != 0:
-            st.write(f"Current Set: {row['duration_seconds']}s with {row['rest_seconds']}s of rest with {row['weight']}lb")
-        else:
-            st.write(f"Current Set: superset with {row['rest_seconds']}s of rest with {row['weight']}lb")
-        
-        st.header("Exercise Notes")
-        
-        st.write(df.iloc[0]['personal_notes'])
-        
-        st.header("Technique Video")
-        st.video(df.iloc[0]['video_url'])
-        
-        
-        st.button("Complete Set")
+            st.header("Exercise Notes")
+            
+            st.write(df.iloc[0]['personal_notes'])
+            
+            st.header("Technique Video")
+            st.video(df.iloc[0]['video_url'])
+            
+            
+            st.button("Complete Set")
         
     
 with r1c3:
