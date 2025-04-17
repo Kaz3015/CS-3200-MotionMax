@@ -78,10 +78,14 @@ Documentation for setting up and understanding the project.
 - Docker and Docker Compose
 - MySQL database client
 
+### Video Link
+https://www.dropbox.com/scl/fi/nkr7w1wku3lwjujknw08i/Final-motionMAX-Video.mp4?riley=3vlt6ygvzm foxr38b5y9z602 &st=6bokvo5o&dl=0
+
 ## Setup Instructions
 
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/Kaz3015/CS-3200-MotionMax.git
 cd <repository-folder>
-run command: docker compose -f docker-compose.yaml up 
+run command: docker compose -f docker-compose.yaml up
+
