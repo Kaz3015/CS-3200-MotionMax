@@ -13,39 +13,14 @@ def HomeNav():
 def AboutPageNav():
     st.sidebar.page_link("pages/30_About.py", label="About", icon="🧠")
 
+def SalesPageNav():
+    st.sidebar.page_link("pages/feedback_survey.py", label="Feedback Survey", icon="📝")
+    st.sidebar.page_link("pages/feedback_survey_output.py", label="Survey Output", icon="📄")
+    st.sidebar.page_link("pages/CAC_LTV.py", label="CAC vs LTV", icon="💸")
+    st.sidebar.page_link("pages/sales_report.py", label="Sales Report", icon="📊")
+    st.sidebar.page_link("pages/user_survey.py", label="User Survey", icon="👤")
+    st.sidebar.page_link("pages/user_survey_output.py", label="User Survey Output", icon="📈")
 
-#### ------------------------ Examples for Role of pol_strat_advisor ------------------------
-def PolStratAdvHomeNav():
-    st.sidebar.page_link(
-        "pages/00_Pol_Strat_Home.py", label="Political Strategist Home", icon="👤"
-    )
-
-
-def WorldBankVizNav():
-    st.sidebar.page_link(
-        "pages/01_World_Bank_Viz.py", label="World Bank Visualization", icon="🏦"
-    )
-
-
-def MapDemoNav():
-    st.sidebar.page_link("pages/02_Map_Demo.py", label="Map Demonstration", icon="🗺️")
-
-
-## ------------------------ Examples for Role of usaid_worker ------------------------
-def ApiTestNav():
-    st.sidebar.page_link("pages/12_API_Test.py", label="Test the API", icon="🛜")
-
-
-def PredictionNav():
-    st.sidebar.page_link(
-        "pages/11_Prediction.py", label="Regression Prediction", icon="📈"
-    )
-
-
-def ClassificationNav():
-    st.sidebar.page_link(
-        "pages/13_Classification.py", label="Classification Demo", icon="🌺"
-    )
 
 
 #### ------------------------ System admin Role ------------------------
@@ -90,10 +65,9 @@ def SideBarLinks(show_home=False):
             )
 
         # If the user role is usaid worker, show the Api Testing page
-        if st.session_state["role"] == "usaid_worker":
-            PredictionNav()
-            ApiTestNav()
-            ClassificationNav()
+        if st.session_state["role"] == "salesperson":
+            SalesPageNav()
+
 
         # If the user is an administrator, give them access to the administrator pages
         if st.session_state["role"] == "administrator":

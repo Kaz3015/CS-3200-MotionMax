@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 # as SideBarLinks function from src/modules folder
 import streamlit as st
 from modules.nav import SideBarLinks
+#from pages.navigation_sales import SideBarLinks
 import requests
 
 # streamlit supports reguarl and wide layout (how the controls
@@ -110,9 +111,9 @@ if not maintenance_mode:
                  type = 'primary',
                  use_container_width=True):
         st.session_state['authenticated'] = True
-        st.session_state['role'] = 'sales'
+        st.session_state['role'] = 'salesperson'
         st.session_state['user_id'] = 2
-        st.switch_page('pages/feedback_survey.py')
+        st.switch_page('pages/CAC_LTV.py')
 
 
 

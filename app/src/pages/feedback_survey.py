@@ -1,5 +1,7 @@
 import requests
 import streamlit as st
+from modules.nav import SideBarLinks
+SideBarLinks(show_home=True)
 
 with st.form("MotionMAX App Feedback"):
     # how did you find our app question

@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import requests
+from modules.nav import SideBarLinks
+SideBarLinks(show_home=True)
 
 def display_user_survey(data):
     #find overall statistics

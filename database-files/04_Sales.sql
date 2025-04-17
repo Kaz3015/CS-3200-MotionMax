@@ -12,8 +12,8 @@ DROP TABLE IF EXISTS User_Marketing;
 DROP TABLE IF EXISTS Users_Engagement_Marketing;
 
 CREATE TABLE Demographics (
-    demographics_id INT PRIMARY KEY,
-    user_id INT UNIQUE,
+    demographics_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNIQUE NOT NULL ,
     age INT,
     gender VARCHAR(50),
     cultural_background VARCHAR(255),
@@ -22,60 +22,64 @@ CREATE TABLE Demographics (
 );
 
 CREATE TABLE User_Demographic_Data (
-    user_id INT,
-    demographics_id INT,
+    user_id INT NOT NULL ,
+    demographics_id INT NOT NULL ,
     PRIMARY KEY (user_id, demographics_id),
     FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE,
     FOREIGN KEY (demographics_id) REFERENCES Demographics(demographics_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Feedback (
-    feedback_id INT PRIMARY KEY,
-    user_id INT,
-    survey_response TEXT,
-    rating INT,
-    comments TEXT,
+    feedback_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    app_discovery TEXT NOT NULL,
+    app_enjoyment TEXT NOT NULL,
+    improvement_suggestions TEXT NOT NULL,
+    similar_apps TEXT NOT NULL,
+    most_useful_feature TEXT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE User_Feedback (
-    user_id INT,
-    feedback_id INT,
+    user_id INT NOT NULL ,
+    feedback_id INT NOT NULL ,
     PRIMARY KEY (user_id, feedback_id),
     FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE,
     FOREIGN KEY (feedback_id) REFERENCES Feedback(feedback_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Sales_Report (
-    report_id INT PRIMARY KEY,
-    date_generated DATE,
-    new_subscribers INT,
-    cancellations INT,
+    report_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    date_generated DATE NOT NULL,
+    new_subscribers INT NOT NULL,
+    cancellations INT NOT NULL,
     revenue_generated DECIMAL(15,2),
-    roi DECIMAL(10,2)
+    roi DECIMAL(10,2),
+    FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
 );
 
-
 CREATE TABLE User_Engagement (
-    engagement_id INT PRIMARY KEY,
-    user_id INT,
+    engagement_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
     click_through_rate DECIMAL(5,2),
     open_rates DECIMAL(5,2),
     FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Marketing_Channels (
-    channel_id INT PRIMARY KEY,
+    channel_id INT AUTO_INCREMENT PRIMARY KEY,
     channel_name VARCHAR(255) NOT NULL UNIQUE,
     user_id INT NOT NULL ,
     budget DECIMAL(15,2),
-    conversions INT,
+    conversions INT NOT NULL,
+    date datetime DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Promo_Codes (
-    promo_code_id INT PRIMARY KEY,
-    user_id INT,
+    promo_code_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL ,
     discount DECIMAL(5,2),
     start_date DATE,
     end_date DATE,
