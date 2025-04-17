@@ -29,6 +29,18 @@ st.session_state['authenticated'] = False
 # showSidebarNavigation = false in the [client] section
 SideBarLinks(show_home=True)
 
+# Maintenance stuff
+try:
+    response = requests.get("http://web-api:4000/a/maintenance")
+    response.raise_for_status()
+    maintenance_mode = response.json().get("maintenance_mode", False)
+except Exception as e:
+    maintenance_mode = False
+
+if maintenance_mode:
+    st.warning("The app is currently under maintenance. Only system admins may log in. We apologize for the inconvience")
+
+
 # ***************************************************
 #    The major content of this page
 # ***************************************************
@@ -43,40 +55,66 @@ st.write('### HI! As which user would you like to log in?')
 # functionality, we put a button on the screen that the user 
 # can click to MIMIC logging in as that mock user. 
 
-if st.button("Act as John, a Political Fitness Trainer",
-            type = 'primary', 
-            use_container_width=True):
-    # when user clicks the button, they are now considered authenticated
-    st.session_state['authenticated'] = True
-    # we set the role of the current user
-    st.session_state['role'] = 'Fitness Trainer'
-    # we add the first name of the user (so it can be displayed on 
-    # subsequent pages). 
-    st.session_state['first_name'] = 'John'
-    st.session_state['last_name'] = 'Smith'
-    # finally, we ask streamlit to switch to another page, in this case, the 
-    # landing page for this particular user type
-    st.session_state['user_id'] = requests.get('http://api:4000/t').json()['user_id']
-    st.session_state['subscriber_id'] = requests.get('http://api:4000/t').json()['subscriber_id']
-    st.session_state['doubleClicked'] = False
-    logger.info("Logging in as Fitness Trainer Persona")
-    st.switch_page('pages/00_Pol_Strat_Home.py')
+if not maintenance_mode:
+    if st.button("Act as John, a Fitness Trainer",
+                 type='primary',
+                 use_container_width=True):
+        # when user clicks the button, they are now considered authenticated
+        st.session_state['authenticated'] = True
+        # we set the role of the current user
+        st.session_state['role'] = 'Fitness Trainer'
+        # we add the first name of the user (so it can be displayed on
+        # subsequent pages).
+        st.session_state['first_name'] = 'John'
+        st.session_state['last_name'] = 'Smith'
+        # finally, we ask streamlit to switch to another page, in this case, the
+        # landing page for this particular user type
+        st.session_state['user_id'] = requests.get('http://api:4000/t').json()['user_id']
+        st.session_state['subscriber_id'] = requests.get('http://api:4000/t').json()['subscriber_id']
+        st.session_state['doubleClicked'] = False
+        st.session_state['form'] = "workout form"
+        st.session_state['used_ingredients'] = []
+        st.session_state['ingredient names'] = []
+        st.session_state['existing recipe'] = False
+        st.session_state['recipe_title'] = None
+        st.session_state['workout_loaded'] = False
+        st.session_state['added_ingredients'] = []
+        st.session_state['recipe_id'] = None
+        logger.info("Logging in as Fitness Trainer Persona")
+        logger.info(f"User ID: {st.session_state['user_id']}")
+        logger.info(f"Subscriber ID: {st.session_state['subscriber_id']}")
+        st.switch_page('pages/Trainer_info_page.py')
 
-if st.button('Act as Alice, a workout client', 
-            type = 'primary', 
-            use_container_width=True):
-    st.session_state['authenticated'] = True
-    st.session_state['role'] = 'client'
-    
-    st.session_state['first_name'] = 'Alice'
-    st.session_state['last_name'] = 'Johnson'
-    st.session_state['user_id'] = requests.get(f'http://api:4000/c/{first_name}/{last_name}/').json()['user_id']
-    st.switch_page('pages/User_Information.py')
 
-if st.button('Act as System Administrator', 
+    if st.button('Act as Alice, a workout client',
+                type = 'primary',
+                use_container_width=True):
+        st.session_state['authenticated'] = True
+        st.session_state['role'] = 'client'
+        st.session_state['first_name'] = 'Alice'
+        st.session_state['last_name'] = 'Johnson'
+        st.session_state['user_id'] = requests.get(f"http://api:4000/c/{st.session_state['first_name']}/{st.session_state['last_name']}/").json()['user_id']
+        st.switch_page('pages/User_Information.py')
+
+if st.button('Act as Jameis, System Administrator',
             type = 'primary', 
             use_container_width=True):
     st.session_state['authenticated'] = True
     st.session_state['role'] = 'administrator'
     st.session_state['first_name'] = 'SysAdmin'
     st.switch_page('pages/20_Admin_Home.py')
+
+if not maintenance_mode:
+    if st.button('Act as Tyler, a Sales Employee',
+                 type = 'primary',
+                 use_container_width=True):
+        st.session_state['authenticated'] = True
+        st.session_state['role'] = 'sales'
+        st.session_state['user_id'] = 2
+        st.switch_page('pages/feedback_survey.py')
+
+
+
+
+
+
