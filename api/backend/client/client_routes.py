@@ -5,8 +5,10 @@ from flask import make_response
 from flask import current_app
 from backend.db_connection import db
 
+#Create a blueprint
 client = Blueprint('client', __name__)
 
+#Route to get a client's user id based on their first and last name
 @client.route('/<first_name>/<last_name>/', methods=['GET'])
 def get_client_id(first_name, last_name):
     query = f'''
@@ -23,6 +25,7 @@ def get_client_id(first_name, last_name):
     response.status_code = 200
     return response
 
+#Route to get a list of circuits made by the user for themself
 @client.route('/workouts/by-client/<user_id>/', methods=['GET'])
 def get_all_user_made_workouts(user_id):
     query = f'''
@@ -39,6 +42,7 @@ def get_all_user_made_workouts(user_id):
     response.status_code = 200
     return response
 
+#Route to get a list of circuits made by a trainer for a client
 @client.route('/workouts/by-trainer/<client_user_id>/', methods=['GET'])
 def get_all_trainer_made_workouts_for_user(client_user_id):
     query = f'''
@@ -55,7 +59,7 @@ def get_all_trainer_made_workouts_for_user(client_user_id):
     response.status_code = 200
     return response
 
-
+#Route to get all of the exercise sets for today's scheduled workout for a user
 @client.route('/workouts/currently-scheduled-exercises/<user_id>/<circuit_id>/', methods=['GET'])
 def all_scheduled_exercises(user_id, circuit_id):
     query = f'''
@@ -75,6 +79,7 @@ def all_scheduled_exercises(user_id, circuit_id):
     response.status_code = 200
     return response
 
+#Route to get the next incomplete exercise set for today's workout
 @client.route('/workouts/currently-scheduled/next-exercise/<user_id>/', methods=['GET'])
 def next_up_workout_exercise_information(user_id):
     query = f'''
@@ -98,6 +103,7 @@ def next_up_workout_exercise_information(user_id):
     response.status_code = 200
     return response
 
+#Route to get the video url for the next scheduled exercise set
 @client.route('/workouts/next-scheduled/video-url/<user_id>/', methods=['GET'])
 def next_up_workout_exercise_video_url(user_id):
     query = f'''
@@ -120,6 +126,7 @@ def next_up_workout_exercise_video_url(user_id):
     response.status_code = 200
     return response
 
+#Route to get a random general health tip
 @client.route('/health/tip/', methods=['GET'])
 def get_health_tip():
     query = f'''
@@ -136,6 +143,7 @@ def get_health_tip():
     response.status_code = 200
     return response
 
+#Route to return a random motivational tip
 @client.route('/motivation/tip/', methods=['GET'])
 def get_motivation_tip():
     query = f'''
@@ -152,7 +160,7 @@ def get_motivation_tip():
     response.status_code = 200
     return response
 
-   
+#Route to get all food items logged today for a specific meal type
 @client.route('/food/food_intake_information/<meal_type>/<user_id>/', methods=['GET'])
 def food_intake_information(meal_type, user_id):
     query = f'''
@@ -172,6 +180,7 @@ def food_intake_information(meal_type, user_id):
     response.status_code = 200
     return response
 
+#Route to summarize macro intake for the past <num_days> days
 @client.route('/food/food_intake_information/all-nutrients-combined-for-day/<num_days>/<user_id>/', methods=['GET'])
 def all_nutrients_for_that_day(num_days, user_id):
     query = f'''
@@ -192,6 +201,7 @@ def all_nutrients_for_that_day(num_days, user_id):
     response.status_code = 200
     return response
 
+#Route to filter exericses by name, equipment, muscle group, difficulty, and exercise type
 @client.route('/exercise/search-filter/name/equipment/muscle_group/difficulty/<difficulty>/exercise_type/<exercise_type>/', 
               defaults={'name': '', 'equipment': '', 'muscle_group': ''}, methods=['GET'])
 @client.route('/exercise/search-filter/name/<name>/equipment/muscle_group/difficulty/<difficulty>/exercise_type/<exercise_type>/', 
@@ -261,6 +271,7 @@ def exercise_search(name, equipment, muscle_group, difficulty, exercise_type):
     cursor.close()
     return jsonify(rows), 200
 
+#Route to create a new circuit enty for a specific user id
 @client.route('/insert/circuit/<user_id>/<circuit_name>/<circuit_description>/<scheduled_date>/', methods=["POST"])
 def insert_circuit(user_id, circuit_name, circuit_description, scheduled_date):
     query = '''
@@ -283,6 +294,7 @@ def insert_circuit(user_id, circuit_name, circuit_description, scheduled_date):
         cursor.close()
     return response
 
+#Route to retrieve the most recently created circuit id for a specific user
 @client.route('/select/newly-made-circuit-id/<user_id>/', methods=["GET"])
 def get_newly_made_circuit_id(user_id):
     query = '''
@@ -299,6 +311,7 @@ def get_newly_made_circuit_id(user_id):
     response.status_code = 200
     return response
 
+#Route to insert an exercise into a specific circuit id
 @client.route('/insert/exercise_to_circuit/<circuit_id>/', methods=["POST"])
 def insert_exercise_to_circuit(circuit_id):
     exercise_info = request.get_json()
@@ -331,6 +344,7 @@ def insert_exercise_to_circuit(circuit_id):
         cursor.close()
     return response
     
+#Route to get the last added exercise to a circuit
 @client.route('/select/last_exercise_added_to_circuit/<user_id>/<circuit_id>/', methods=["GET"])
 def get_last_exercise_added_to_circuit(user_id, circuit_id):
     query = f'''
@@ -350,6 +364,7 @@ def get_last_exercise_added_to_circuit(user_id, circuit_id):
     response.status_code = 200
     return response
     
+#Route to add an exercise set to a exercise in a circuit
 @client.route('/insert/exercise_set_to_circuit/<exercise_id>/<set_order>/<weight>/<reps>/<duration>/<superset>/<rest>/', methods=["POST"])
 def insert_exercise_set_to_exercise(exercise_id, set_order, weight, reps, duration, superset, rest):
     query = f'''
@@ -372,6 +387,7 @@ def insert_exercise_set_to_exercise(exercise_id, set_order, weight, reps, durati
         cursor.close()
     return response 
 
+#Route to mark a specific exercise set as completed
 @client.route('/update/complete_exercise_set/<exercise_id>/<exerciseset_id>/', methods=["PUT"])
 def update_exerciseset_to_mark_set_completed(exercise_id, exerciseset_id):
     query = f'''
@@ -395,6 +411,7 @@ def update_exerciseset_to_mark_set_completed(exercise_id, exerciseset_id):
         cursor.close()
     return response 
 
+#Route to get the food log for a specific meal type
 @client.route('/select/food_log/<user_id>/<meal_type>/', methods=["GET"])
 def get_food_log(user_id, meal_type):
     query = '''
@@ -409,6 +426,7 @@ def get_food_log(user_id, meal_type):
     cursor.close()
     return jsonify(rows), 200
 
+#Route to add a food log for a specific meal type for a specific user id
 @client.route('/insert/insert_food_log/<user_id>/<meal_type>/', methods=["POST"])
 def insert_food_log(user_id, meal_type):
     query = """
@@ -428,6 +446,7 @@ def insert_food_log(user_id, meal_type):
     finally:
         cursor.close()
 
+#Route to add a new food item to the database
 @client.route('/insert/insert_food_item/<meal_name>/<calories>/<protein>/<carbs>/<fats>/', methods=["POST"])
 def insert_food_item(meal_name, calories, protein, carbs, fats):
     query = f"""
@@ -447,8 +466,7 @@ def insert_food_item(meal_name, calories, protein, carbs, fats):
     finally:
         cursor.close()
 
-
-
+#Route to add a new food item to a specific food log
 @client.route('/insert/insert_food_item_to_food_log/<food_log_id>/<food_item_id>/<servings>/', methods=["POST"])
 def insert_food_item_to_food_log(food_log_id, food_item_id, servings):
     query = f'''    
@@ -471,6 +489,7 @@ def insert_food_item_to_food_log(food_log_id, food_item_id, servings):
         cursor.close()
     return response 
 
+#Route t olog the completion of a circuit workout session
 @client.route('/insert/workout_log/<user_id>/<circuit_id>/', methods=["POST"])
 def insert_workout_log(user_id, circuit_id):
     query = """
