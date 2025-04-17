@@ -52,7 +52,7 @@ INSERT INTO User (user_id, first_name, last_name, email, gender, role, height_ft
   VALUES (25, 'Christopher', 'Wilson', 'christopher.wilson@example.com', 'other', 'trainer', 6, 7, 137.13, '1990-10-31', '2025-10-24 02:41:32', '2025-10-24 02:41:32');
 
 INSERT INTO User (user_id, first_name, last_name, email, gender, role, height_ft, height_in, weight, date_of_birth) VALUES
-(26, 'Alice',   'Johnson',    'alice.johnson@example.com',   'female', 'client', 5, 6, 135.2, '1990-03-15'),
+(26, 'Sam',   'Johnson',    'alice.johnson@example.com',   'female', 'client', 5, 6, 135.2, '1990-03-15'),
 (27, 'Benjamin','Smith',      'ben.smith@example.com',        'male',   'client', 5, 10, 180.0, '1985-07-22'),
 (28, 'Catherine','Lee',       'catherine.lee@example.com',    'female', 'client', 5, 4,  120.5, '1992-11-02'),
 (29, 'David',   'Martinez',   'david.martinez@example.com',   'male',   'client', 6, 1,  200.3, '1988-06-30'),
