@@ -481,3 +481,35 @@ def get_newly_made_circuit_id(user_id):
     response.status_code = 200
     return response
 
+@client.route('/insert/exercise_to_circuit/<circuit_id>/', methods=["POST"])
+def insert_exercise_to_circuit(circuit_id):
+    exercise_info = request.get_json()
+    name = exercise_info["exercise_name"]
+    exercise_id = exercise_info["exercise_id"]
+    exercise_type = exercise_info["exercise_type"]
+    exercise_difficulty = exercise_info["exercise_difficulty"]
+    exercise_target_muscle = exercise_info["exercise_target_muscle"]
+    exercise_equipment = exercise_info["exercise_equipment"]
+    video_url = exercise_info["video_url"]
+    full_set_info = exercise_info["sets"]
+    
+    query = f'''
+        INSERT INTO Exercise(circuit_id, name, description, exercise_type, difficulty, target_muscle, equipment_needed, video_url, personal_notes)
+        VALUES({circuit_id}, '{name}', 'no description', '{exercise_type}', '{exercise_difficulty}', '{exercise_target_muscle}', '{exercise_equipment}', '{video_url}', 'no notes');
+    '''
+    
+    connection = db.get_db()
+    cursor = connection.cursor()
+    try:
+        cursor.execute(query)
+        connection.commit()
+        response = make_response(jsonify({"status": "success", "message": "Exercise inserted successfully."}))
+        response.status_code = 200
+    except Exception as e:
+        connection.rollback()
+        response = make_response(jsonify({"error": str(e)}))
+        response.status_code = 400
+    finally:
+        cursor.close()
+    return response
+    
