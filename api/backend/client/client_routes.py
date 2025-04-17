@@ -577,3 +577,17 @@ def update_exerciseset_to_mark_set_completed(exercise_id, exerciseset_id):
         cursor.close()
     return response 
 
+@client.route('/select/food_log/<user_id>/<meal_type>/', methods=["GET"])
+def get_food_log(user_id, meal_type):
+    query = '''
+        SELECT fl.food_log_id
+        FROM FoodLog fl
+            JOIN User u ON fl.user_id = u.user_id
+        WHERE fl.meal_type = %s AND fl.user_id = %s AND fl.date_logged = CURRENT_DATE
+    '''
+    cursor = db.get_db().cursor()
+    cursor.execute(query, (meal_type, user_id))
+    rows = cursor.fetchall()
+    cursor.close()
+    return jsonify(rows), 200
+
