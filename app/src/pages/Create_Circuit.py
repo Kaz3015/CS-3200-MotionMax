@@ -68,7 +68,7 @@ with r1c1:
     #Additional filter inputs
     equipment = st.text_input("Equipment", value="", placeholder="")
     muscle_group = st.text_input("Muscle Group", value="", placeholder="")
-    difficulty = st.selectbox("Difficulty", ("all", "beginner", "intermediate", "advanced"), placeholder="all")
+    difficulty = st.selectbox("Difficulty", ("all", "beginner", "intermediate", "advanced"), placeholder="beginner")
     exercise_type = st.selectbox("Exercise Type", ("all", "strength", "cardiovascular", "flexibility", "balance"), placeholder="strength")
     
 #Fetch exercises based on the filters
