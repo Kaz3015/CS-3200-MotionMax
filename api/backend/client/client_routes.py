@@ -15,7 +15,7 @@ def get_client_id():
     query = '''
         SELECT  u.user_id
         FROM User u
-        WHERE u.first_name = 'Jane' AND u.last_name = 'Smith' AND u.role = 'client'
+        WHERE u.first_name = 'Alice' AND u.last_name = 'Johnson' AND u.role = 'client'
         LIMIT 1;
     '''
     
@@ -47,7 +47,7 @@ def get_client_id():
 @client.route('/workouts/by-client/<user_id>/', methods=['GET'])
 def get_all_user_made_workouts(user_id):
     query = f'''
-        SELECT c.name, c.description
+        SELECT c.name
         FROM Circuit c
             JOIN User u ON c.created_by = u.user_id
         WHERE u.role = 'client' AND c.user_id = {user_id};
@@ -77,16 +77,15 @@ def get_all_trainer_made_workouts_for_user(client_user_id):
     return response
 
 
-
-@client.route('/workouts/currently-scheduled-exercises/<user_id>/', methods=['GET'])
-def all_scheduled_exercises(user_id):
+@client.route('/workouts/currently-scheduled-exercises/<user_id>/<circuit_id>/', methods=['GET'])
+def all_scheduled_exercises(user_id, circuit_id):
     query = f'''
         SELECT c.name AS `CircuitName`, c.target_muscle, e.name, es.weight, es.reps, es.duration_seconds, es.is_superset, es.rest_seconds, es.completed, es.set_order
         FROM Circuit c
             JOIN User u ON c.user_id = u.user_id
             JOIN Exercise e ON c.circuit_id = e.circuit_id
             JOIN ExerciseSet es ON e.exercise_id = es.exercise_id
-        WHERE c.scheduled_date = CURRENT_DATE AND u.user_id = {user_id}
+        WHERE c.scheduled_date = CURRENT_DATE AND u.user_id = {user_id} AND c.circuit_id = {circuit_id}
         ORDER BY c.circuit_id, e.name, es.set_order;
     '''
     
@@ -97,35 +96,16 @@ def all_scheduled_exercises(user_id):
     response.status_code = 200
     return response
 
-
-@client.route('/test/<user_id>', methods=['GET'])
-def blagkwfannfa(user_id):
-    query = f'''
-    SELECT c.name
-        FROM Circuit c
-            JOIN User u ON c.user_id = u.user_id
-        WHERE u.user_id = {user_id}
-        ''' 
-    
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    theData = cursor.fetchall()
-    response = make_response(jsonify(theData))
-    response.status_code = 200
-    return response
-
-
-
 @client.route('/workouts/currently-scheduled/next-exercise/<user_id>/', methods=['GET'])
 def next_up_workout_exercise_information(user_id):
     query = f'''
-        SELECT e.name, e.personal_notes, e.video_url, e.target_muscle, es.reps, es.duration_seconds, es.is_superset, es.weight, es.rest_seconds
+        SELECT c.circuit_id, es.exerciseset_id, e.exercise_id, e.name, e.personal_notes, e.video_url, e.target_muscle, es.reps, es.duration_seconds, es.is_superset, es.weight, es.rest_seconds
         FROM Exercise e
             JOIN Circuit c ON e.circuit_id = c.circuit_id
             JOIN User u ON c.user_id = u.user_id
             JOIN ExerciseSet es ON e.exercise_id = es.exercise_id
         WHERE c.scheduled_date = CURRENT_DATE AND u.user_id = {user_id}
-        GROUP BY e.exercise_id, es.set_order, e.name, e.personal_notes, e.video_url, e.target_muscle,
+        GROUP BY c.circuit_id, es.exerciseset_id, e.exercise_id, es.set_order, e.name, e.personal_notes, e.video_url, e.target_muscle,
             es.reps, es.duration_seconds, es.is_superset, es.weight, es.rest_seconds
         HAVING COUNT(*) > SUM(IF(es.completed = TRUE, 1, 0))
         ORDER BY e.exercise_id, es.set_order
@@ -398,45 +378,82 @@ def exercise_search(name, equipment, muscle_group, difficulty, exercise_type):
     name = name.strip()
     equipment = equipment.strip()
     muscle_group = muscle_group.strip()
-    
-    params = [difficulty, exercise_type]
 
-    query = '''
-            SELECT e.exercise_id, e.name, e.equipment_needed, e.target_muscle, e.difficulty, e.exercise_type, e.video_url
-            FROM Exercise e
-            WHERE e.difficulty = %s AND e.exercise_type = %s
-        '''
-        
-    if name != "" and name != None:
-        query += " AND e.name LIKE CONCAT('%%', %s, '%%')"
-        params.append(name)
-    if equipment != "" and equipment != None:
-        query += " AND e.equipment_needed LIKE CONCAT('%%', %s, '%%')"
-        params.append(equipment)
-    if muscle_group != "" and muscle_group != None:
-        query += " AND e.target_muscle LIKE CONCAT('%%', %s, '%%')"
-        params.append(muscle_group)
-        
-    query += ";"    
-    
+    filters = []
+    params = []
+
+    if difficulty.lower() != 'all':
+        filters.append("e.difficulty = %s")
+        params.append(difficulty)
+
+    if exercise_type.lower() != 'all':
+        filters.append("e.exercise_type = %s")
+        params.append(exercise_type)
+
+    if name:
+        filters.append("e.name LIKE %s")
+        params.append(f"%{name}%")
+
+    if equipment:
+        filters.append("e.equipment_needed LIKE %s")
+        params.append(f"%{equipment}%")
+
+    if muscle_group:
+        filters.append("e.target_muscle LIKE %s")
+        params.append(f"%{muscle_group}%")
+
+    query = """
+        SELECT
+          MIN(e.exercise_id)            AS exercise_id,
+          e.name,
+          ANY_VALUE(e.equipment_needed) AS equipment_needed,
+          ANY_VALUE(e.target_muscle)    AS target_muscle,
+          ANY_VALUE(e.difficulty)       AS difficulty,
+          ANY_VALUE(e.exercise_type)    AS exercise_type,
+          ANY_VALUE(e.video_url)        AS video_url
+        FROM Exercise e
+    """
+
+    if filters:
+        query += " WHERE " + " AND ".join(filters)
+
+    query += """
+        GROUP BY e.name
+        ORDER BY e.name;
+    """
+
     cursor = db.get_db().cursor()
     cursor.execute(query, tuple(params))
+    rows = cursor.fetchall()
+    cursor.close()
+    return jsonify(rows), 200
+
+@client.route('/insert/default_user_circuit/<user_id>', methods=['GET'])
+def insert_default_user_circuit(user_id):
+    query = f'''
+            INSERT INTO Circuit(user_id, created_by, name, description, circuit_type, difficulty, target_muscle, equipment_needed)
+                VALUES
+                ({user_id}, {user_id}, 'No Name', 'No Description', 'strength', 'beginner', 'No Target Muscle', 'No Equipment Needed'),
+        ''' 
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
     theData = cursor.fetchall()
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
 
-@client.route('/insert/circuit/<user_id>/<circuit_name>/<circuit_description>/', methods=["POST"])
-def insert_circuit(user_id, circuit_name, circuit_description):
+@client.route('/insert/circuit/<user_id>/<circuit_name>/<circuit_description>/<scheduled_date>/', methods=["POST"])
+def insert_circuit(user_id, circuit_name, circuit_description, scheduled_date):
     query = '''
-        INSERT INTO Circuit(user_id, created_by, name, description, circuit_type, difficulty, target_muscle, equipment_needed)
-        VALUES (%s, %s, %s, %s, 'strength', 'beginner', 'No Target Muscle', 'No Equipment Needed')
+        INSERT INTO Circuit(user_id, created_by, name, description, circuit_type, difficulty, target_muscle, equipment_needed, scheduled_date)
+        VALUES (%s, %s, %s, %s, 'strength', 'beginner', 'No Target Muscle', 'No Equipment Needed', %s);
     '''
     
     connection = db.get_db()
     cursor = connection.cursor()
     try:
-        cursor.execute(query, (user_id, user_id, circuit_name, circuit_description))
+        cursor.execute(query, (user_id, user_id, circuit_name, circuit_description, scheduled_date))
         connection.commit()
         response = make_response(jsonify({"status": "success", "message": "Circuit inserted successfully."}))
         response.status_code = 200
@@ -448,13 +465,19 @@ def insert_circuit(user_id, circuit_name, circuit_description):
         cursor.close()
     return response
 
-@client.route('/insert/exercise_set_to_circuit/<circuit_id>/<exercise_set_info>/')
-def insert_exercise_set_to_circuit(circuit_id, exercise_set_info):
+@client.route('/select/newly-made-circuit-id/<user_id>/', methods=["GET"])
+def get_newly_made_circuit_id(user_id):
     query = '''
-        INSERT INTO Exercise(circuit_id, name, description, exercise_type, difficulty, target_muscle, equipment_needed, video_url, personal_notes)
-            VALUES();
-    
-    
-        INSERT INTO ExerciseSet(exercise_id, weight, reps, duration_seconds, is_superset, rest_Seconds, completed, set_order)
-            VALUES();
+        SELECT c.circuit_id
+        FROM Circuit c
+        ORDER BY circuit_id DESC
+        LIMIT 1;
     '''
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+
