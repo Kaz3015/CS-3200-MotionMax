@@ -2,6 +2,9 @@
 
 This repository contains the codebase for the MotionMax application, a fitness and wellness platform. The project integrates a Streamlit-based frontend, a Flask REST API backend, and a MySQL database to provide a comprehensive solution for managing workouts, exercises, and recipes.
 
+# Team Members
+Julien Motaharian, Kyle Zicherman, Satvik Repaka, Joseph Grammatica
+
 ## Project Overview
 
 The MotionMax application is designed to:
