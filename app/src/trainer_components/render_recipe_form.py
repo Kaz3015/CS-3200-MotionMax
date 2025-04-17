@@ -51,6 +51,11 @@ def render_recipe_form():
         </style>
         """, unsafe_allow_html=True)
 
+        calories_val = 0
+        protein_val = 0
+        carbs_val = 0
+        fat_val = 0
+
         #Loading data from API for existing recipe
         if st.session_state['existing recipe']:
            data = requests.get(f'http://api:4000/t/{st.session_state["user_id"]}/{st.session_state["recipe_id"]}/recipe').json()
@@ -166,10 +171,6 @@ def render_recipe_form():
                     st.session_state['measurements'] = []
                     st.session_state['recipe_title'] = ""
                     st.session_state['recipe_description'] = ""
-                    st.session_state['calories'] = 0
-                    st.session_state['protein'] = 0
-                    st.session_state['carbs'] = 0
-                    st.session_state['fat'] = 0
                     st.session_state['instructions'] = ""
                     st.session_state['existing recipe'] = False
                     st.session_state['added_ingredients'] = []

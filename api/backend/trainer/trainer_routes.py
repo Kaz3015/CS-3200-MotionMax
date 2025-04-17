@@ -208,82 +208,149 @@ def get_workout_names(trainer_id):
 
 @trainer.route('/<trainer_id>/addWorkout/<workout_id>', methods=['PUT'])
 @trainer.route('/<trainer_id>/addWorkout', methods=['POST'])
-def add_workout(trainer_id, workout_id=-1):
-    the_data = request.json
-    current_app.logger.info(the_data)
-    current_app.logger.setLevel('DEBUG')
-
-    # Extracting the variable
-    title = the_data['title']
-    description = the_data['description']
-    exercises = the_data['exercises']
+def upsert_workout(trainer_id, workout_id=None):
+    data = request.json
     cursor = db.get_db().cursor()
-    if request.method == 'POST':
-        query = f'''
-            INSERT INTO Workout_Template (title, description, user_id)
-            VALUES ('{title}', '{description}', {trainer_id})
-        '''
-        cursor.execute(query)
-        db.get_db().commit()
-        workout_id = cursor.lastrowid
-        exc = update_insert(trainer_id, workout_id, the_data)
-        for i, exercise in enumerate(exc):
-            query = f'''
-                INSERT INTO Workout_Exercise_Template (w_id, et_id, sequence)
-                VALUES ({workout_id}, {exercise}, {i + 1})
-            '''
-            cursor.execute(query)
-            db.get_db().commit()
-    elif request.method == 'PUT':
-        query = f'''
-                    UPDATE Workout_Template
-                    SET title = '{title}', description = '{description}'
-                    WHERE w_id = {workout_id};
-                '''
-        current_app.logger.info(f"Workout id: {workout_id}")
-        current_app.logger.info(f"Query {query}")
-        cursor.execute(query)
-        db.get_db().commit()
-        cursor = db.get_db().cursor()
-        query = f'''
-                   SELECT wet.et_id
-                   From Workout_Exercise_Template wet
-                   JOIN Workout_Template wt ON wet.w_id = wt.w_id
-                   WHERE wt.user_id = {trainer_id} and wt.w_id = {workout_id};
-               '''
-        cursor.execute(query)
-        et_ids = cursor.fetchall()
-        et_ids = [et_id['et_id'] for et_id in et_ids]
-        current_app.logger.info(f"Exercise ids: {et_ids}")
-        exc = update_insert(trainer_id, workout_id, the_data)
-        for i, exercise in enumerate(exc):
-            if exercise[0] not in et_ids:
-                query = f'''
-                    INSERT INTO Workout_Exercise_Template (w_id, et_id, sequence)
-                    VALUES ({workout_id}, {exercise[0]}, {i + 1})
-                '''
-                cursor.execute(query)
-                db.get_db().commit()
-            else:
-                query = f'''
-                    UPDATE Workout_Exercise_Template
-                    SET et_id = {exercise[0]}, sequence = {i + 1}
-                    WHERE w_id = {workout_id} AND sequence = {i + 1};
-                '''
-                cursor.execute(query)
-                db.get_db().commit()
-                et_ids.remove(exercise[0])
-        for et_id in et_ids:
-            query = f'''
-                DELETE FROM Workout_Exercise_Template
-                WHERE w_id = {workout_id} AND et_id = {et_id};
-            '''
-            cursor.execute(query)
-            db.get_db().commit()
 
-    response = make_response("Successfully added workout")
-    response.status_code = 200
-    return response
+    # 1) UPSERT the Workout_Template
+    if data.get('w_id'):
+        # update existing
+        w_id = data['w_id']
+        cursor.execute("""
+            UPDATE Workout_Template
+               SET title = %s,
+                   description = %s
+             WHERE w_id = %s
+        """, (
+            data['title'],
+            data.get('description'),
+            w_id
+        ))
+    else:
+        # insert new
+        cursor.execute("""
+            INSERT INTO Workout_Template (user_id, title, description)
+                 VALUES (%s, %s, %s)
+        """, (
+            data['user_id'],
+            data['title'],
+            data.get('description'),
+        ))
+        w_id = cursor.lastrowid
+
+    # 2) Figure out which et_id’s already exist in DB for this workout
+    cursor.execute("""
+        SELECT et_id
+          FROM Workout_Exercise_Template
+         WHERE w_id = %s
+    """, (w_id,))
+    existing_et_ids = {row['et_id'] for row in cursor.fetchall()}
+
+    incoming_et_ids = set()
+
+    # 3) Loop through payload exercises to insert or update
+    for ex in data['exercises']:
+        seq     = ex['sequence']
+        rep_low = ex['rep_low']
+        rep_high= ex['rep_high']
+        sets    = ex['sets']
+        title   = ex['title']
+        desc    = ex.get('description','')
+
+        if ex.get('et_id'):
+            # ---- UPDATE path ----
+            et_id  = ex['et_id']
+            emd_id = ex['emd_id']
+            incoming_et_ids.add(et_id)
+
+            # update the template parameters
+            cursor.execute("""
+                UPDATE Exercise_Template
+                   SET rep_low  = %s,
+                       rep_high = %s,
+                       sets     = %s
+                 WHERE et_id = %s
+            """, (rep_low, rep_high, sets, et_id))
+
+            # update the meta‐data
+            cursor.execute("""
+                UPDATE Exercise_Meta_Data
+                   SET title       = %s,
+                       description = %s
+                 WHERE emd_id = %s
+            """, (title, desc, emd_id))
+
+            # update the sequence in the join table
+            cursor.execute("""
+                UPDATE Workout_Exercise_Template
+                   SET sequence = %s
+                 WHERE w_id     = %s
+                   AND et_id    = %s
+            """, (seq, w_id, et_id))
+
+        else:
+            # ---- INSERT path ----
+            #  a) create core exercise template
+            cursor.execute("""
+                INSERT INTO Exercise_Template (rep_low, rep_high, sets)
+                     VALUES (%s, %s, %s)
+            """, (rep_low, rep_high, sets))
+            new_et_id = cursor.lastrowid
+            incoming_et_ids.add(new_et_id)
+
+            #  b) link it to this workout + sequence
+            cursor.execute("""
+                INSERT INTO Workout_Exercise_Template (w_id, et_id, sequence)
+                     VALUES (%s, %s, %s)
+            """, (w_id, new_et_id, seq))
+
+            #  c) create its meta‐data
+            cursor.execute("""
+                INSERT INTO Exercise_Meta_Data (title, description)
+                     VALUES (%s, %s)
+            """, (title, desc))
+            new_emd_id = cursor.lastrowid
+
+            #  d) link template ↔ meta‐data
+            cursor.execute("""
+                INSERT INTO Exercise_Template_Meta_Data (et_id, emd_id)
+                     VALUES (%s, %s)
+            """, (new_et_id, new_emd_id))
+
+    # 4) DELETE any exercises that were removed in the payload
+    to_delete = existing_et_ids - incoming_et_ids
+    for et_id in to_delete:
+        # un‐link from this workout
+        cursor.execute("""
+            DELETE FROM Workout_Exercise_Template
+             WHERE w_id  = %s
+               AND et_id = %s
+        """, (w_id, et_id))
+
+        # Optionally, delete the template & its meta‐data if you want no orphans:
+        cursor.execute("""
+            DELETE etm
+              FROM Exercise_Template_Meta_Data AS etm
+             WHERE etm.et_id = %s
+        """, (et_id,))
+
+        # find & delete its meta‐row
+        cursor.execute("""
+            DELETE FROM Exercise_Meta_Data
+             WHERE emd_id NOT IN (
+               SELECT emd_id
+                 FROM Exercise_Template_Meta_Data
+             )
+        """)
+
+        # finally delete the core template
+        cursor.execute("""
+            DELETE FROM Exercise_Template
+             WHERE et_id = %s
+        """, (et_id,))
+
+    db.get_db().commit()
+    return jsonify({"status": "success", "w_id": w_id})
 
 
 def update_insert(trainer_id, workout_id, payload):

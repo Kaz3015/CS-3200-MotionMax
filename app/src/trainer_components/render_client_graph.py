@@ -7,7 +7,8 @@ import plotly.graph_objects as go
 
 
 
-def create_macro_donut(protein_g, carbs_g, fat_g):
+
+def create_macro_donut(protein_g, carbs_g, fat_g, title=None):
     if not protein_g or not carbs_g or not fat_g:
         st.write("No data available for macronutrients.")
         return

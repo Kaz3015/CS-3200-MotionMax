@@ -3,6 +3,9 @@ import requests
 import trainer_components.render_list as render_list
 import trainer_components.workout_form as workout_form
 import trainer_components.render_recipe_form as recipe_form
+from modules.nav import SideBarLinks
+
+SideBarLinks(show_home=True)
 
 row = st.columns([3,4,3])
 

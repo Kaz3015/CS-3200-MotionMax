@@ -5,6 +5,7 @@ import json
 from datetime import datetime
 import trainer_components.pill as pill
 
+
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -202,7 +203,9 @@ def save_workout_to_database():
 
         if response.status_code in (200, 201):
             logger.info(f"Workout saved successfully: {response.json()}")
+            st.session_state['preserve_exercises'] = False
             return True, "Workout saved successfully!"
+
         else:
             logger.error(f"Error saving workout: {response.text}")
             return False, f"Error saving workout: {response.text}"
@@ -426,9 +429,13 @@ def render_workout_form():
                     with col1:
                         if st.button("Edit", key=f"edit_{i}"):
                             edit_exercise(i)
-                    with col2:
-                        if st.button("Remove", key=f"remove_{i}"):
-                            st.session_state['exercises'].pop(i)
+                    remove_key = f"remove_{i}"
+                    if st.button("Remove", key=remove_key):
+                        st.session_state["exercises"].pop(i)
+                        st.session_state['preserve_exercises'] = True
+                        st.rerun()  # Rerun to refresh the UI
+                        # Preserve state after removal
+
 
         # Check if the form needs to be reset (after adding an exercise)
         if st.session_state['reset_form']:

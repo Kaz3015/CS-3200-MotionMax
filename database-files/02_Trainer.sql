@@ -61,8 +61,8 @@ CREATE TABLE Exercise_Template_Meta_Data (
     et_id INT NOT NULL,
     emd_id INT NOT NULL,
     PRIMARY KEY (et_id, emd_id),
-    FOREIGN KEY (et_id) REFERENCES Exercise_Template(et_id) ON DELETE CASCADE,
-    FOREIGN KEY (emd_id) REFERENCES Exercise_Meta_Data(emd_id) ON DELETE CASCADE
+    FOREIGN KEY (et_id) REFERENCES Exercise_Template(et_id) ,
+    FOREIGN KEY (emd_id) REFERENCES Exercise_Meta_Data(emd_id)
 );
 
 CREATE TABLE Recipe (
