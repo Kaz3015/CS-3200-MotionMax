@@ -434,3 +434,7 @@ INSERT INTO Support_Tickets (
     ('closed',      '2025-01-24 17:50:26', '2025-01-25 11:35:19', 'Workout reminder notifications not working',11,3);
 
 
+--  App State for Maintenance
+
+INSERT INTO App_State (setting_key, setting_value)
+VALUES ('maintenance_mode', 'off');
