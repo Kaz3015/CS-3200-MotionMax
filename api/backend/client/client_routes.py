@@ -631,3 +631,25 @@ def insert_food_item(meal_name, calories, protein, carbs, fats):
 
 
 
+@client.route('/insert/insert_food_item_to_food_log/<food_log_id>/<food_item_id>/<servings>/', methods=["POST"])
+def insert_food_item_to_food_log(food_log_id, food_item_id, servings):
+    query = f'''    
+        INSERT INTO FoodLog_FoodItem(food_log_id, food_item_id, servings)
+            VALUES({food_log_id}, {food_item_id}, {servings});
+    '''
+    
+    connection = db.get_db()
+    cursor = connection.cursor()
+    try:
+        cursor.execute(query)
+        connection.commit()
+        response = make_response(jsonify({"status": "success", "message": "FoodLog_FoodItem inserted successfully."}))
+        response.status_code = 200
+    except Exception as e:
+        connection.rollback()
+        response = make_response(jsonify({"error": str(e)}))
+        response.status_code = 400
+    finally:
+        cursor.close()
+    return response 
+
