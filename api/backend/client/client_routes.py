@@ -653,3 +653,20 @@ def insert_food_item_to_food_log(food_log_id, food_item_id, servings):
         cursor.close()
     return response 
 
+@client.route('/insert/workout_log/<user_id>/<circuit_id>/', methods=["POST"])
+def insert_workout_log(user_id, circuit_id):
+    query = """
+        INSERT INTO WorkoutLog (user_id, circuit_id, datetime_logged, duration, description, calories_burned)
+            VALUES (%s, %s, NOW(), NULL, '', NULL)
+    """
+    conn = db.get_db()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(query, (user_id, circuit_id))
+        conn.commit()
+        return jsonify({"status": "success", "workoutlog_id": cursor.lastrowid}), 200
+    except Exception as e:
+        conn.rollback()
+        return jsonify({"status": "error", "message": str(e)}), 400
+    finally:
+        cursor.close()
