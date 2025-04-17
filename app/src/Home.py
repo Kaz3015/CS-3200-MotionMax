@@ -111,7 +111,7 @@ if not maintenance_mode:
                  type = 'primary',
                  use_container_width=True):
         st.session_state['authenticated'] = True
-        st.session_state['role'] = 'sales'
+        st.session_state['role'] = 'salesperson'
         st.session_state['user_id'] = 2
         st.switch_page('pages/CAC_LTV.py')
 

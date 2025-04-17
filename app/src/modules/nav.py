@@ -14,12 +14,12 @@ def AboutPageNav():
     st.sidebar.page_link("pages/30_About.py", label="About", icon="🧠")
 
 def SalesPageNav():
-    st.sidebar.page_link("feedback_survey.py", label="Feedback Survey", icon="📝")
-    st.sidebar.page_link("feedback_survey_output.py", label="Survey Output", icon="📄")
-    st.sidebar.page_link("CAC_LTV.py", label="CAC vs LTV", icon="💸")
-    st.sidebar.page_link("sales_report.py", label="Sales Report", icon="📊")
-    st.sidebar.page_link("user_survey.py", label="User Survey", icon="👤")
-    st.sidebar.page_link("user_survey_output.py", label="User Survey Output", icon="📈")
+    st.sidebar.page_link("pages/feedback_survey.py", label="Feedback Survey", icon="📝")
+    st.sidebar.page_link("pages/feedback_survey_output.py", label="Survey Output", icon="📄")
+    st.sidebar.page_link("pages/CAC_LTV.py", label="CAC vs LTV", icon="💸")
+    st.sidebar.page_link("pages/sales_report.py", label="Sales Report", icon="📊")
+    st.sidebar.page_link("pages/user_survey.py", label="User Survey", icon="👤")
+    st.sidebar.page_link("pages/user_survey_output.py", label="User Survey Output", icon="📈")
 
 
 
