@@ -182,7 +182,7 @@ with r2c1:
     
     #Iterate through circuits and display them
     for index, row in df.iterrows():
-        st.button(row['name'])
+        st.subheader(row['name'])
       
 #Middle Column: Food Intake Data  
 with r2c2:
