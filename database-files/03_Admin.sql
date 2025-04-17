@@ -31,10 +31,10 @@ CREATE TABLE Flagged_Content (
         FOREIGN KEY (exercise_media) REFERENCES Exercise_Media(exercise_media_id) ON DELETE CASCADE,
 
     CONSTRAINT fk_flagged_content_user_flagger
-        FOREIGN KEY (flagged_by_user) REFERENCES User(user_id),
+        FOREIGN KEY (flagged_by_user) REFERENCES User(user_id) ON DELETE CASCADE,
 
     CONSTRAINT fk_flagged_content_user_reviewer
-        FOREIGN KEY (reviewed_by_admin) REFERENCES User(user_id)
+        FOREIGN KEY (reviewed_by_admin) REFERENCES User(user_id) ON DELETE SET NULL
 );
 
 CREATE TABLE Activity_Log (
@@ -44,7 +44,7 @@ CREATE TABLE Activity_Log (
     admin INT NOT NULL,
 
     CONSTRAINT fk_activity_log_admin
-        FOREIGN KEY (admin) REFERENCES User(user_id)
+        FOREIGN KEY (admin) REFERENCES User(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE System_Metrics (
@@ -70,10 +70,10 @@ CREATE TABLE Support_Tickets (
     resolved_by_admin INT,
 
     CONSTRAINT fk_support_tickets_user_creator
-        FOREIGN KEY (created_by_user) REFERENCES User(user_id),
+        FOREIGN KEY (created_by_user) REFERENCES User(user_id) ON DELETE CASCADE,
 
     CONSTRAINT fk_support_tickets_user_resolver
-        FOREIGN KEY (resolved_by_admin) REFERENCES User(user_id)
+        FOREIGN KEY (resolved_by_admin) REFERENCES User(user_id) ON DELETE SET NULL
 );
 
 CREATE TABLE App_State (

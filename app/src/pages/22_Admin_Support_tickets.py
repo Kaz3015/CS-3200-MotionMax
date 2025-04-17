@@ -1,8 +1,10 @@
 import streamlit as st
 import requests
+from modules.nav import SideBarLinks
 
 st.set_page_config(layout="wide")
 st.title("Submit a Support Ticket")
+SideBarLinks()
 
 with st.form("support_form"):
     user_id = st.number_input("User ID", min_value=1, step=1)

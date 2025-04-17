@@ -1,9 +1,11 @@
 import streamlit as st
 import requests
 import pandas as pd
+from modules.nav import SideBarLinks
 
 st.set_page_config(layout="wide")
 st.title("All Support Tickets")
+SideBarLinks()
 
 url = "http://web-api:4000/a/support"  # ← change to api:4000 if needed
 

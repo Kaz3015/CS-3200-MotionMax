@@ -139,6 +139,8 @@ def update_user_profile(user_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# ------------------------------------------------------------
+
 @admin.route("/maintenance", methods=["GET"])
 def get_maintenance_status():
     try:
@@ -153,6 +155,8 @@ def get_maintenance_status():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+# ------------------------------------------------------------
 
 @admin.route("/maintenance", methods=["PUT"])
 def update_maintenance_status():
@@ -175,5 +179,18 @@ def update_maintenance_status():
 
         return jsonify({"message": f"Maintenance mode set to {value_str}"}), 200
 
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# ------------------------------------------------------------
+
+@admin.route('/users/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    try:
+        cursor = db.get_db().cursor()
+        cursor.execute("DELETE FROM User WHERE user_id = %s", (user_id,))
+        db.get_db().commit()
+
+        return jsonify({"message": f"User {user_id} deleted successfully."}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
