@@ -86,13 +86,13 @@ if not maintenance_mode:
         st.switch_page('pages/Trainer_info_page.py')
 
 
-    if st.button('Act as Alice, a workout client',
+    if st.button('Act as Sam, a workout client',
                 type = 'primary',
                 use_container_width=True):
         st.session_state['authenticated'] = True
         st.session_state['role'] = 'client'
         
-        st.session_state['first_name'] = 'Alice'
+        st.session_state['first_name'] = 'Sam'
         st.session_state['last_name'] = 'Johnson'
         st.session_state['user_id'] = requests.get(f"http://api:4000/c/{st.session_state['first_name']}/{st.session_state['last_name']}/").json()['user_id']
         st.switch_page('pages/User_Information.py')
