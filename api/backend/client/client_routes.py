@@ -247,13 +247,14 @@ def exercise_search(name, equipment, muscle_group, difficulty, exercise_type):
 
     query = """
         SELECT
-          MIN(e.exercise_id)            AS exercise_id,
+          MIN(e.exercise_id) AS exercise_id,
           e.name,
           ANY_VALUE(e.equipment_needed) AS equipment_needed,
-          ANY_VALUE(e.target_muscle)    AS target_muscle,
-          ANY_VALUE(e.difficulty)       AS difficulty,
-          ANY_VALUE(e.exercise_type)    AS exercise_type,
-          ANY_VALUE(e.video_url)        AS video_url
+          ANY_VALUE(e.target_muscle) AS target_muscle,
+          ANY_VALUE(e.difficulty) AS difficulty,
+          ANY_VALUE(e.exercise_type) AS exercise_type,
+          ANY_VALUE(e.video_url) AS video_url,
+          ANY_VALUE(e.description) AS description
         FROM Exercise e
     """
 
