@@ -3,6 +3,10 @@ import trainer_components.render_list as render_list
 import streamlit as st
 import streamlit_shadcn_ui as ui
 import requests
+import logging
+from modules.nav import SideBarLinks
+
+SideBarLinks(show_home=True)
 
 def on_name_click(name, subscriber_id):
     if st.session_state['subscriber_id'] != subscriber_id:
@@ -19,7 +23,11 @@ def on_name_click(name, subscriber_id):
 row = st.columns([2.5, 3.5, 4])
 with row[0]:
     response = requests.get(f'http://api:4000/t/{st.session_state["user_id"]}/getClients').json()
+    logger = logging.getLogger(__name__)
+    logger.info(f"Response: {response}")
+
     names = [f"{person['first_name']} {person['last_name']}" for person in response]
+    logger.info(f"Names: {names}")
     st.session_state['subscriber_name'] = names[0]
     subscriber_ids = [person['subscriber_id'] for person in response]
     render_list.name_button_column(title="List of Clients", names=names, on_click_function=on_name_click,
