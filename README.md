@@ -11,6 +11,21 @@ The MotionMax application is designed to:
 - Allows trainers to post recipes to help clients attain their dream physique.
 - Messaging between a trainer and his clients is avaivbile which can be used for questions and suggestions.
 - Provide role-based access control (RBAC) for different user roles (sales, trainer, clients/users, and system admin).
+- Get user feedback through a posted survey and diplay the output to the sales administrator
+- Get user demographics from the posted main user survey and display the combined user demographics to the sales administrator
+- Gets the customer acquisition cost which finds the cost of acquiring a customer in a month
+- Displays the customer lifetime value of the app displaying how much profit customers contribute to the app
+- Get output that user inputted about their demographics and displays it to the sales admin
+- Get output that user inputted about their feedback on the app and displays it to the sales admin
+- Get the count of monthly subscribers we have on the app
+- Get the revenue we have earned from customers on the application
+- Can return a list of all the products with the sales price and the detail information for a particular product
+- Can update the price of a product and mark a product out of stock
+-  Get all the support tickets, submit a new support tickets, and also resolve a support
+-  Get user details of a user profile by the ID, uopdate the user profile details, remove the user account form the app
+- Get the user details of a user profile by name and get current maintenance mode setting
+- Can turn the maintenence mode on and off
+-  
 
 ## Project Structure
 
