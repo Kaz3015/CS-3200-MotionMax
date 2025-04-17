@@ -195,7 +195,7 @@ def get_feedback_survey_output(rows=None):
 
 #------------------------------------------------------------
 #this gets the count of the subscribers that we have in a certain month
-@sales.route('/subscriber_count/', methods=['GET'])
+@sales.route('/subscriber_count', methods=['GET'])
 def get_subscriber_count():
     query = """
     SELECT MONTH(created_at) AS month, COUNT(*) AS subscriber_count
@@ -248,89 +248,6 @@ def get_revenue():
     # The cursor will return the data as a
     # Python Dictionary
     theData = cursor.fetchall()
-
-    # Create a HTTP Response object and add results of the query to it
-    # after "jasonify"-ing it.
-    response = make_response(jsonify(theData))
-    # set the proper HTTP Status code of 200 (meaning all good)
-    response.status_code = 200
-    # send the response back to the client
-    return response
-
-#------------------------------------------------------------
-#this gets the marketing channels we have used for the app
-@sales.route('/marketing_channel', methods=['GET'])
-def get_marketing_channel():
-    query = '''
-        SELECT 
-            channel_id,
-            channel_name,
-            description,
-            active_status
-        FROM 
-            MarketingChannels
-        WHERE
-            active_status = 1
-        ORDER BY 
-            channel_id ASC
-    '''
-
-    # get a cursor object from the database
-    cursor = db.get_db().cursor()
-
-    # use cursor to query the database for a list of products
-    cursor.execute(query)
-
-    # fetch all the data from the cursor
-    # The cursor will return the data as a
-    # Python Dictionary
-    theData = cursor.fetchall()
-
-    # Prepare response
-    channels_list = []
-    for channel in channels:
-        channels_list.append({
-            'channel_id': channel['channel_id'],
-            'channel_name': channel['channel_name'],
-            'description': channel['description']
-        })
-
-    # Create a HTTP Response object and add results of the query to it
-    # after "jasonify"-ing it.
-    response = make_response(jsonify(theData))
-    # set the proper HTTP Status code of 200 (meaning all good)
-    response.status_code = 200
-    # send the response back to the client
-    return response
-
-#------------------------------------------------------------
-#this gets the count of the subscribers that we have on the app
-@sales.route('/marketing_channel_performance', methods=['GET'])
-def get_marketing_channel_performance():
-    query = """
-        SELECT mc.channel_name, COUNT(DISTINCT um.user_id) AS total_customers_acquired
-        FROM User_Marketing um
-        JOIN Marketing_Channels mc ON um.channel_id = mc.channel_id
-        GROUP BY mc.channel_name
-        ORDER BY total_customers_acquired DESC;
-        """
-
-    # get a cursor object from the database
-    cursor = db.get_db().cursor()
-
-    # use cursor to query the database for a list of products
-    cursor.execute(query)
-
-    # fetch all the data from the cursor
-    # The cursor will return the data as a
-    # Python Dictionary
-    theData = cursor.fetchall()
-
-    # Prepare response
-    performance_data = [
-        {"channel_name": row[0], "total_customers_acquired": row[1]}
-        for row in results
-    ]
 
     # Create a HTTP Response object and add results of the query to it
     # after "jasonify"-ing it.
