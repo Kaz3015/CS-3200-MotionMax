@@ -719,10 +719,10 @@ INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (3, 49, 
 INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (10, 46, '2025-04-22 00:00:00');
 INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (7, 46, '2025-01-28 00:00:00');
 INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (23, 47, '2025-06-22 00:00:00');
-INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (13, 46, '2025-04-10 00:00:00');
+INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (11, 46, '2025-04-10 00:00:00');
 INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (7, 37, '2025-09-27 00:00:00');
 INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (12, 43, '2025-10-03 00:00:00');
-INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (8, 46, '2025-04-18 00:00:00');
+INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (1, 46, '2025-04-18 00:00:00');
 INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (14, 29, '2025-02-03 00:00:00');
 INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (5, 26, '2025-09-19 00:00:00');
 INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (6, 50, '2025-08-30 00:00:00');
@@ -743,7 +743,7 @@ INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (25, 43,
 INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (4, 44, '2025-05-09 00:00:00');
 INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (25, 30, '2025-05-20 00:00:00');
 INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (18, 45, '2025-11-04 00:00:00');
-INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (10, 45, '2025-04-02 00:00:00');
+INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (1, 45, '2025-04-02 00:00:00');
 INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (7, 35, '2025-10-04 00:00:00');
 INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (7, 26, '2025-10-01 00:00:00');
 INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (4, 46, '2025-08-06 00:00:00');
@@ -783,7 +783,7 @@ INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (10, 26,
 INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (25, 43, '2025-10-12 00:00:00');
 INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (9, 31, '2025-07-10 00:00:00');
 INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (2, 41, '2025-05-21 00:00:00');
-INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (25, 42, '2025-04-28 00:00:00');
+INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (1, 42, '2025-04-28 00:00:00');
 INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (5, 29, '2025-02-23 00:00:00');
 INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (12, 44, '2025-01-12 00:00:00');
 INSERT INTO Subscription (creator_id, subscriber_id, created_at) VALUES (25, 40, '2025-07-07 00:00:00');
@@ -882,7 +882,7 @@ INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (23, 47
 INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (2, 27, 'Hi coach, I just logged today''s workout—feeling great! Any tips for recovery?', '2025-02-04 01:08:03');
 INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (20, 39, 'I have mild DOMS—should I still go heavy tomorrow?', '2025-09-08 21:05:32');
 INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (24, 50, 'Traveling next week—can you send a hotel‑gym routine?', '2025-07-20 13:56:23');
-INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (4, 35, 'I have mild DOMS—should I still go heavy tomorrow?', '2025-09-16 14:08:05');
+INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (1, 35, 'I have mild DOMS—should I still go heavy tomorrow?', '2025-09-16 14:08:05');
 INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (9, 28, 'Could we move our next session to Thursday morning?', '2025-06-25 13:36:59');
 INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (5, 37, 'Loved yesterday''s HIIT circuit! How often should I repeat it this week?', '2025-12-29 12:11:23');
 INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (1, 30, 'Energy was low today—should I adjust carbs before training?', '2025-05-11 19:46:20');
@@ -900,7 +900,7 @@ INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (2, 37,
 INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (18, 42, 'My smartwatch shows high HRV today—good day for max effort?', '2025-02-14 01:07:24');
 INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (24, 47, 'Can we revisit my 5 RM targets next session?', '2025-07-21 03:17:28');
 INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (13, 46, 'Energy was low today—should I adjust carbs before training?', '2025-09-05 19:06:26');
-INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (8, 42, 'Hi coach, I just logged today''s workout—feeling great! Any tips for recovery?', '2025-02-11 23:48:25');
+INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (1, 42, 'Hi coach, I just logged today''s workout—feeling great! Any tips for recovery?', '2025-02-11 23:48:25');
 INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (15, 39, 'Loved yesterday''s HIIT circuit! How often should I repeat it this week?', '2025-03-31 22:42:55');
 INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (20, 28, 'Is it okay to swap salmon for chicken in tonight''s meal plan?', '2025-01-11 13:12:51');
 INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (15, 41, 'Can you check my form video on deadlifts?', '2025-10-06 14:43:39');
@@ -917,7 +917,7 @@ INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (21, 37
 INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (9, 34, 'Heading to the mountains this weekend—any body‑weight alternatives?', '2025-02-23 15:52:01');
 INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (15, 27, 'Could you review my food log and give feedback?', '2025-02-26 19:17:57');
 INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (21, 49, 'What’s the difference between front squats and back squats for quad focus?', '2025-07-15 09:54:42');
-INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (11, 35, 'Could you review my food log and give feedback?', '2025-02-06 07:17:59');
+INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (1, 35, 'Could you review my food log and give feedback?', '2025-02-06 07:17:59');
 INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (13, 30, 'Quick question: how many grams of protein should I aim for on rest days?', '2025-09-09 18:21:50');
 INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (24, 28, 'Thinking about adding an extra cardio day—what intensity do you recommend?', '2025-07-27 16:00:54');
 INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (2, 41, 'What’s the difference between front squats and back squats for quad focus?', '2025-12-29 23:46:05');
@@ -927,4 +927,4 @@ INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (18, 27
 INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (24, 30, 'Energy was low today—should I adjust carbs before training?', '2025-11-14 18:30:39');
 INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (12, 47, 'What’s the difference between front squats and back squats for quad focus?', '2025-09-04 05:58:11');
 INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (3, 49, 'Can we revisit my 5 RM targets next session?', '2025-10-04 15:49:12');
-INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (11, 42, 'Can you check my form video on deadlifts?', '2025-07-30 13:24:52');
+INSERT INTO Message (receiver_id, sender_id, content, created_at) VALUES (1, 42, 'Can you check my form video on deadlifts?', '2025-07-30 13:24:52');
