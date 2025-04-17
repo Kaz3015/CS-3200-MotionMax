@@ -82,6 +82,7 @@ if not maintenance_mode:
         st.session_state['workout_loaded'] = False
         st.session_state['added_ingredients'] = []
         st.session_state['recipe_id'] = None
+        st.session_state['workout_id'] = None
         logger.info(f"Logging in as Fitness Trainer Persona with role as {st.session_state['role']} and authenticated as {st.session_state['authenticated']}")
         logger.info(f"User ID: {st.session_state['user_id']}")
         logger.info(f"Subscriber ID: {st.session_state['subscriber_id']}")
