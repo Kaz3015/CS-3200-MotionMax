@@ -532,3 +532,25 @@ def get_last_exercise_added_to_circuit(user_id, circuit_id):
     response.status_code = 200
     return response
     
+@client.route('/insert/exercise_set_to_circuit/<exercise_id>/<set_order>/<weight>/<reps>/<duration>/<superset>/<rest>/', methods=["POST"])
+def insert_exercise_set_to_exercise(exercise_id, set_order, weight, reps, duration, superset, rest):
+    query = f'''
+        INSERT INTO ExerciseSet(exercise_id, weight, reps, duration_seconds, is_superset, rest_seconds, completed, set_order)
+            VALUES({exercise_id}, {weight}, {reps}, {duration}, {superset}, {rest}, FALSE, {set_order})
+    '''   
+    
+    connection = db.get_db()
+    cursor = connection.cursor()
+    try:
+        cursor.execute(query)
+        connection.commit()
+        response = make_response(jsonify({"status": "success", "message": "ExerciseSet inserted successfully."}))
+        response.status_code = 200
+    except Exception as e:
+        connection.rollback()
+        response = make_response(jsonify({"error": str(e)}))
+        response.status_code = 400
+    finally:
+        cursor.close()
+    return response 
+
