@@ -6,12 +6,12 @@ This repository contains the codebase for the MotionMax application, a fitness a
 
 The MotionMax application is designed to:
 - Gives users access to created workouts from experienced trainers through a subscription.
-- Allows users to track their workouts through a easy comprehensive fitness tracking soluton
-- Allows users to track their macronurteitns and calories throughout the day through a food log
+- Allows users to track their workouts through a easy comprehensive fitness tracking solution
+- Allows users to track their macronutrients and calories throughout the day through a food log
 - Allows trainers to post recipes to help clients attain their dream physique.
-- Messaging between a trainer and his clients is avaivbile which can be used for questions and suggestions.
+- Messaging between a trainer and his clients is available which can be used for questions and suggestions.
 - Provide role-based access control (RBAC) for different user roles (sales, trainer, clients/users, and system admin).
-- Get user feedback through a posted survey and diplay the output to the sales administrator
+- Get user feedback through a posted survey and display the output to the sales administrator
 - Get user demographics from the posted main user survey and display the combined user demographics to the sales administrator
 - Gets the customer acquisition cost which finds the cost of acquiring a customer in a month
 - Displays the customer lifetime value of the app displaying how much profit customers contribute to the app
@@ -22,10 +22,26 @@ The MotionMax application is designed to:
 - Can return a list of all the products with the sales price and the detail information for a particular product
 - Can update the price of a product and mark a product out of stock
 -  Get all the support tickets, submit a new support tickets, and also resolve a support
--  Get user details of a user profile by the ID, uopdate the user profile details, remove the user account form the app
+-  Get user details of a user profile by the ID, update the user profile details, remove the user account form the app
 - Get the user details of a user profile by name and get current maintenance mode setting
-- Can turn the maintenence mode on and off
--  
+- Can turn the maintenance mode on and off
+- User can see workouts they made for themself
+- User can see workouts made for them by trainers
+- User can see breakdown of their workout for the day along with next up exercise information,
+  muscle group information, exercise notes, technique video, and full workout exercise information
+  with sets.
+- User  can see a reminder to help remind them to complete their workout
+- User can see motivation to get them through their next workout
+- User can see their food intake per meal type
+- User can see their macronutrients intake over time
+- User can create themselves a new workout circuit which is completely customizable
+- User can search for exercises they want to do, or create their own
+- User can add as many sets as desired with multiple options to choose from
+- User can include multiple exercises for the circuit, and choose the scheduled date for it
+- User can add a food item to their daily food intake data based on meal type
+- User can customize the food item entirely
+- User can complete a set to allow for easy exercise tracking and to help them keep track of what
+  they have next
 
 ## Project Structure
 
