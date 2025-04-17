@@ -438,7 +438,6 @@ def insert_circuit(user_id, circuit_name, circuit_description):
     try:
         cursor.execute(query, (user_id, user_id, circuit_name, circuit_description))
         connection.commit()
-        # Return a success message (no rows are returned by an INSERT)
         response = make_response(jsonify({"status": "success", "message": "Circuit inserted successfully."}))
         response.status_code = 200
     except Exception as e:
@@ -448,3 +447,14 @@ def insert_circuit(user_id, circuit_name, circuit_description):
     finally:
         cursor.close()
     return response
+
+@client.route('/insert/exercise_set_to_circuit/<circuit_id>/<exercise_set_info>/')
+def insert_exercise_set_to_circuit(circuit_id, exercise_set_info):
+    query = '''
+        INSERT INTO Exercise(circuit_id, name, description, exercise_type, difficulty, target_muscle, equipment_needed, video_url, personal_notes)
+            VALUES();
+    
+    
+        INSERT INTO ExerciseSet(exercise_id, weight, reps, duration_seconds, is_superset, rest_Seconds, completed, set_order)
+            VALUES();
+    '''
