@@ -91,6 +91,7 @@ if not maintenance_mode:
                 use_container_width=True):
         st.session_state['authenticated'] = True
         st.session_state['role'] = 'client'
+        
         st.session_state['first_name'] = 'Alice'
         st.session_state['last_name'] = 'Johnson'
         st.session_state['user_id'] = requests.get(f"http://api:4000/c/{st.session_state['first_name']}/{st.session_state['last_name']}/").json()['user_id']
