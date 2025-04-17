@@ -554,3 +554,26 @@ def insert_exercise_set_to_exercise(exercise_id, set_order, weight, reps, durati
         cursor.close()
     return response 
 
+@client.route('/update/complete_exercise_set/<exercise_id>/<exerciseset_id>/', methods=["PUT"])
+def update_exerciseset_to_mark_set_completed(exercise_id, exerciseset_id):
+    query = f'''
+            UPDATE ExerciseSet es
+                SET es.completed = TRUE
+                WHERE es.exercise_id = {exercise_id} AND es.exerciseset_id = {exerciseset_id}
+        '''   
+    
+    connection = db.get_db()
+    cursor = connection.cursor()
+    try:
+        cursor.execute(query)
+        connection.commit()
+        response = make_response(jsonify({"status": "success", "message": "ExerciseSet inserted successfully."}))
+        response.status_code = 200
+    except Exception as e:
+        connection.rollback()
+        response = make_response(jsonify({"error": str(e)}))
+        response.status_code = 400
+    finally:
+        cursor.close()
+    return response 
+
