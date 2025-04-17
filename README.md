@@ -82,7 +82,7 @@ Documentation for setting up and understanding the project.
 - MySQL database client
 
 ### Video Link
-https://www.dropbox.com/scl/fi/nkr7w1wku3lwjujknw08i/Final-motionMAX-Video.mp4?riley=3vlt6ygvzm foxr38b5y9z602 &st=6bokvo5o&dl=0
+https://www.dropbox.com/scl/fi/nkr7w1wku3lwjujknw08i/Final-motionMAX-Video.mp4?rlkey=3vlt6ygvzmfoxr38b5y9z602y&st=sklbmiu4&dl=0
 
 ## Setup Instructions
 
