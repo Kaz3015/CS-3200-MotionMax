@@ -10,7 +10,7 @@ The MotionMax application is designed to:
 - Allows users to track their macronurteitns and calories throughout the day through a food log
 - Allows trainers to post recipes to help clients attain their dream physique.
 - Messaging between a trainer and his clients is avaivbile which can be used for questions and suggestions.
-- Provide role-based access control (RBAC) for different user roles (sales, trainer, clients/users, and system admin.
+- Provide role-based access control (RBAC) for different user roles (sales, trainer, clients/users, and system admin).
 
 ## Project Structure
 
