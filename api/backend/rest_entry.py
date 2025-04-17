@@ -4,7 +4,6 @@ from backend.client.client_routes import client
 from backend.trainer.trainer_routes import trainer
 from backend.sales.sales_routes import sales
 from backend.admin.admin_routes import admin
-from backend.simple.simple_routes import simple_routes
 import os
 from dotenv import load_dotenv
 
@@ -47,7 +46,6 @@ def create_app():
             # raise e
 
     # Register blueprints
-    app.register_blueprint(simple_routes)
     app.register_blueprint(trainer, url_prefix='/t')
     app.register_blueprint(client, url_prefix='/c')
     app.register_blueprint(sales, url_prefix='/s')
