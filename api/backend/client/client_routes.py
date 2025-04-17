@@ -10,12 +10,12 @@ from backend.db_connection import db
 # routes.
 client = Blueprint('client', __name__)
 
-@client.route('/', methods=['GET'])
-def get_client_id():
-    query = '''
+@client.route('/<first_name>/<last_name>/', methods=['GET'])
+def get_client_id(first_name, last_name):
+    query = f'''
         SELECT  u.user_id
         FROM User u
-        WHERE u.first_name = 'Alice' AND u.last_name = 'Johnson' AND u.role = 'client'
+        WHERE u.first_name = {first_name} AND u.last_name = {last_name} AND u.role = 'client'
         LIMIT 1;
     '''
     
